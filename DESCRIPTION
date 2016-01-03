@@ -1,0 +1,15 @@
+Package: benchmarkmeData
+Type: Package
+Title: Data Set for the Benchmarkme packages
+Version: 0.1.0
+Date: 2016-01-03
+Authors@R: person(given="Colin", family="Gillespie",
+    email="csgillespie@gmail.com", role = c("aut", "cre"))
+Maintainer: Colin Gillespie <csgillespie@gmail.com>
+Description: Output from the benchmarkme package.
+URL: https://github.com/csgillespie/benchmarkme-data
+BugReports: https://github.com/csgillespie/benchmarkme-data/issues
+LazyData: TRUE
+Suggests: testthat
+RoxygenNote: 5.0.1
+License: GPL-2 | GPL-3
