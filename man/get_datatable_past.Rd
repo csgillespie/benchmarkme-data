@@ -4,7 +4,7 @@
 \alias{get_datatable_past}
 \title{Interactive table of results}
 \usage{
-get_datatable_past(byte_optimize = NULL)
+get_datatable_past(tests = NULL, byte_optimize = NULL, cpu)
 }
 \arguments{
 \item{byte_optimize}{Default \code{NULL}. The default behaviour is to plot all results.
