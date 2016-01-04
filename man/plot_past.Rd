@@ -4,9 +4,11 @@
 \alias{plot_past}
 \title{Plot past results}
 \usage{
-plot_past(byte_optimize = NULL, log = "y")
+plot_past(test = NULL, byte_optimize = NULL, log = "y")
 }
 \arguments{
+\item{test}{Default \code{NULL}. The default behaviour is to average over all tests.}
+
 \item{byte_optimize}{Default \code{NULL}. The default behaviour is to plot all results.
 To plot only the byte optimized results, set to \code{TRUE}, otherwise \code{FALSE}.}
 
@@ -16,7 +18,7 @@ the argument equal to the empty parameter string, \code{""}.}
 \description{
 Plot the previous benchmarks. This function creates two figures.
 \itemize{
-\item Figure 1: Total benchmark time over all benchmarks (in seconds) on the y-axis..
+\item Figure 1: Total benchmark time over all benchmarks (in seconds) on the y-axis.
 \item Figure 2: Relative time (compared to the smallest benchmark).
 }
 The data set used is \code{data(past_results)}.

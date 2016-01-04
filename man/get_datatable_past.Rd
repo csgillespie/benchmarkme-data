@@ -4,14 +4,15 @@
 \alias{get_datatable_past}
 \title{Interactive table of results}
 \usage{
-get_datatable_past(tests = NULL, byte_optimize = NULL, cpu)
+get_datatable_past(test = NULL, byte_optimize = NULL)
 }
 \arguments{
+\item{test}{Default \code{NULL}. The default behaviour is to average over all tests.}
+
 \item{byte_optimize}{Default \code{NULL}. The default behaviour is to plot all results.
 To plot only the byte optimized results, set to \code{TRUE}, otherwise \code{FALSE}.}
 }
 \description{
-Compare your results against past results. Your results is 
-shown in Orange.
+A summary of past results
 }
 

@@ -2,10 +2,11 @@
 #' 
 #' Plot the previous benchmarks. This function creates two figures.
 #' \itemize{
-#' \item Figure 1: Total benchmark time over all benchmarks (in seconds) on the y-axis..
+#' \item Figure 1: Total benchmark time over all benchmarks (in seconds) on the y-axis.
 #' \item Figure 2: Relative time (compared to the smallest benchmark).
 #' }
 #' The data set used is \code{data(past_results)}.
+#' @param test Default \code{NULL}. The default behaviour is to average over all tests. 
 #' @param byte_optimize Default \code{NULL}. The default behaviour is to plot all results.
 #' To plot only the byte optimized results, set to \code{TRUE}, otherwise \code{FALSE}.
 #' @param log By default the y axis is plotted on the log scale. To change, set the 
@@ -14,32 +15,48 @@
 #' ## Plot non byte optimize code
 #' plot_past(byte_optimize=FALSE)
 #' @export
-plot_past = function(byte_optimize = NULL, log="y") {
+plot_past = function(test=NULL, byte_optimize=NULL, log="y") {
   ## Load past data
   tmp_env = new.env()
   data(past_results, package="benchmarkmeData", envir = tmp_env)
-  pas_res = tmp_env$past_results
-  pas_res = pas_res[order(pas_res$timings), ]
-  if(!is.null(byte_optimize) && byte_optimize)
-    pas_res = pas_res[pas_res$byte_optimize > 0.5,]
-  else if(!is.null(byte_optimize) && !byte_optimize)
-    pas_res = pas_res[pas_res$byte_optimize < 0.5,]
+  results = tmp_env$past_results
   
+  if(!is.null(byte_optimize)){
+    if(byte_optimize) {
+      results = results[results$byte_optimize > 0.5,]
+    } else {
+      results = results[results$byte_optimize < 0.5,]
+    }
+  }
+  
+  if(is.null(test)) test = unique(results$test)
+  results = results[results$test %in% test,]
+  
+  ## Aggregate over test
+  ## Ensure that we have timings for all required tests.
+  results = aggregate(time ~ id + byte_optimize + cpu + date + sysname, 
+                      data=results, 
+                      FUN=function(i) ifelse(length(i) == length(test), sum(i), NA))
+  results = results[!is.na(results$time), ]
+  results = results[order(results$time), ]
   ## Sort plot
   op = par(mar=c(3,3,2,1), 
            mgp=c(2,0.4,0), tck=-.01,
            cex.axis=0.8, las=1, mfrow=c(1,2)) 
   on.exit(op)
-  ymax = max(pas_res$timings)
-  plot(pas_res$timings, xlab="Rank", ylab="Total timing (secs)", 
-       ylim=c(1, ymax), xlim=c(1, nrow(pas_res)+1), 
+  ymin = min(results$time)
+  ymax = max(results$time)
+  plot(results$time, xlab="Rank", ylab="Total timing (secs)", 
+       ylim=c(ymin, ymax), xlim=c(1, nrow(results)+1), 
        panel.first=grid(), log=log)
   
   ## Relative timings  
-  fastest = min(pas_res$timings)
-  ymax= ymax/fastest
-  plot(pas_res$timings/fastest, xlab="Rank", ylab="Relative timing", 
-       ylim=c(1, ymax), xlim=c(1, nrow(pas_res)+1), 
+  fastest = min(results$time)
+  ymax = ymax/fastest
+  plot(results$time/fastest, xlab="Rank", ylab="Relative timing", 
+       ylim=c(1, ymax), xlim=c(1, nrow(results)+1), 
        panel.first=grid(), log=log)
   abline(h=1, lty=3)
+  
+  invisible(results)
 }

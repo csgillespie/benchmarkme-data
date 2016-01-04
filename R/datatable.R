@@ -1,20 +1,16 @@
 #' Interactive table of results
 #' 
-#' Compare your results against past results. Your results is 
-#' shown in Orange.
+#' A summary of past results
 #' @inheritParams plot_past
-#' 
 #' @export
-get_datatable_past = function(byte_optimize=NULL) {
+get_datatable_past = function(test=NULL, byte_optimize=NULL) {
   if(!requireNamespace("DT", quietly = TRUE))
     stop("Install DT package to use datatable")
-  
-  
+
   ## Load past data
-  tmp_env = environment()
+  tmp_env = new.env()
   data(past_results, package="benchmarkmeData", envir = tmp_env)
   results = tmp_env$past_results
-  results$cpus = as.character(results$cpus)
   
   if(!is.null(byte_optimize)){
     if(byte_optimize) {
@@ -24,16 +20,26 @@ get_datatable_past = function(byte_optimize=NULL) {
     }
   }
   
-  results$timings = signif(results$timings, 5)
-  results = results[order(results$timings), ]
-  results$rank = 1:nrow(results)
+  if(is.null(test)) test = unique(results$test)
+  results = results[results$test %in% test,]
   
+  ## Aggregate over test
+  ## Ensure that we have timings for all required tests.
+  results = aggregate(time ~ id + byte_optimize + cpu + date + sysname, 
+                      data=results, 
+                      FUN=function(i) ifelse(length(i) == length(test), sum(i), NA))
+  results = results[!is.na(results$time), ]
+  
+  results$time = signif(results$time, 4)
+  results = results[order(results$time), ]
+  results$rank = 1:nrow(results)
+  colnames(results)
   if(is.null(byte_optimize)){
-    results = results[,c("rank", "cpus", "timings", "byte_optimize")]
-    colnames(results) = c("Rank", "CPU", "Time (sec)", "Byte Compile")
+    results = results[,c("rank", "time", "cpu", "byte_optimize", "sysname")]
+    colnames(results) = c("Rank", "Time (sec)", "CPU", "Byte Compile", "OS")
   } else {
-    results = results[,c("rank", "cpus", "timings")]
-    colnames(results) = c("Rank", "CPU", "Time (sec)")
+    results = results[,c("rank", "time", "cpu", "sysname")]
+    colnames(results) = c("Rank", "Time (sec)", "CPU", "OS")
   }
   DT::datatable(results, rownames=FALSE) 
 }
