@@ -6,7 +6,7 @@
 #' \item Figure 2: Relative time (compared to the smallest benchmark).
 #' }
 #' The data set used is \code{data(past_results)}.
-#' @param test Default \code{NULL}. The default behaviour is to average over all tests. 
+#' @param test_group Default \code{NULL}. The default behaviour is to average over all tests. 
 #' @param byte_optimize Default \code{NULL}. The default behaviour is to plot all results.
 #' To plot only the byte optimized results, set to \code{TRUE}, otherwise \code{FALSE}.
 #' @param log By default the y axis is plotted on the log scale. To change, set the 
@@ -14,8 +14,10 @@
 #' @examples 
 #' ## Plot non byte optimize code
 #' plot_past(byte_optimize=FALSE)
+#' @importFrom graphics abline grid par plot points
+#' @importFrom utils data
 #' @export
-plot_past = function(test=NULL, byte_optimize=NULL, log="y") {
+plot_past = function(test_group=NULL, byte_optimize=NULL, log="y") {
   ## Load past data
   tmp_env = new.env()
   data(past_results, package="benchmarkmeData", envir = tmp_env)
@@ -29,14 +31,14 @@ plot_past = function(test=NULL, byte_optimize=NULL, log="y") {
     }
   }
   
-  if(is.null(test)) test = unique(results$test)
-  results = results[results$test %in% test,]
+  if(is.null(test_group)) test_group = unique(results$test_group)
+  results = results[results$test_group %in% test_group,]
   
   ## Aggregate over test
   ## Ensure that we have timings for all required tests.
   results = aggregate(time ~ id + byte_optimize + cpu + date + sysname, 
                       data=results, 
-                      FUN=function(i) ifelse(length(i) == length(test), sum(i), NA))
+                      FUN=function(i) ifelse(length(i) == length(test_group), sum(i), NA))
   results = results[!is.na(results$time), ]
   results = results[order(results$time), ]
   ## Sort plot

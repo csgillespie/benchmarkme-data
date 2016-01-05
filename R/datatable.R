@@ -3,7 +3,7 @@
 #' A summary of past results
 #' @inheritParams plot_past
 #' @export
-get_datatable_past = function(test=NULL, byte_optimize=NULL) {
+get_datatable_past = function(test_group=NULL, byte_optimize=NULL) {
   if(!requireNamespace("DT", quietly = TRUE))
     stop("Install DT package to use datatable")
 
@@ -20,14 +20,14 @@ get_datatable_past = function(test=NULL, byte_optimize=NULL) {
     }
   }
   
-  if(is.null(test)) test = unique(results$test)
-  results = results[results$test %in% test,]
+  if(is.null(test_group)) test_group = unique(results$test_group)
+  results = results[results$test_group %in% test_group,]
   
   ## Aggregate over test
   ## Ensure that we have timings for all required tests.
   results = aggregate(time ~ id + byte_optimize + cpu + date + sysname, 
                       data=results, 
-                      FUN=function(i) ifelse(length(i) == length(test), sum(i), NA))
+                      FUN=function(i) ifelse(length(i) == length(test_group), sum(i), NA))
   results = results[!is.na(results$time), ]
   
   results$time = signif(results$time, 4)

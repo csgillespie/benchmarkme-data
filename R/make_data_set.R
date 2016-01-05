@@ -21,7 +21,7 @@ summarise_results = function(res) {
     sysname = res$sys_info$sysname
     release = res$sys_info$release
   } 
-  data.frame(id, date, time=timings, test=tests, 
+  data.frame(id, date, time=timings, test_group=tests, 
              cpu=cpus, ram=as.numeric(ram), byte_optimize, 
              r_major, r_minor, 
              sysname, release,
