@@ -10,6 +10,7 @@ Description: Output from the benchmarkme package.
 URL: https://github.com/csgillespie/benchmarkme-data
 BugReports: https://github.com/csgillespie/benchmarkme-data/issues
 LazyData: TRUE
+Imports: graphics, utils
 Suggests: testthat, DT
 RoxygenNote: 5.0.1
 License: GPL-2 | GPL-3
