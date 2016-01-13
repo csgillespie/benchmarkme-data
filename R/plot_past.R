@@ -17,7 +17,8 @@
 #' @importFrom graphics abline grid par plot points
 #' @importFrom utils data
 #' @export
-plot_past = function(test_group=NULL, byte_optimize=NULL, log="y") {
+plot_past = function(test_group=c("prog", "matrix_fun", "matrix_cal"), 
+                     byte_optimize=NULL, log="y") {
   ## Load past data
   tmp_env = new.env()
   data(past_results, package="benchmarkmeData", envir = tmp_env)

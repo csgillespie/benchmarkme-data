@@ -4,7 +4,8 @@
 \alias{get_datatable_past}
 \title{Interactive table of results}
 \usage{
-get_datatable_past(test_group = NULL, byte_optimize = NULL)
+get_datatable_past(test_group = c("prog", "matrix_fun", "matrix_cal"),
+  byte_optimize = NULL)
 }
 \arguments{
 \item{test_group}{Default \code{NULL}. The default behaviour is to average over all tests.}

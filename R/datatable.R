@@ -3,7 +3,8 @@
 #' A summary of past results
 #' @inheritParams plot_past
 #' @export
-get_datatable_past = function(test_group=NULL, byte_optimize=NULL) {
+get_datatable_past = function(test_group=c("prog", "matrix_fun", "matrix_cal"), 
+                              byte_optimize=NULL) {
   if(!requireNamespace("DT", quietly = TRUE))
     stop("Install DT package to use datatable")
 

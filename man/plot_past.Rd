@@ -4,7 +4,8 @@
 \alias{plot_past}
 \title{Plot past results}
 \usage{
-plot_past(test_group = NULL, byte_optimize = NULL, log = "y")
+plot_past(test_group = c("prog", "matrix_fun", "matrix_cal"),
+  byte_optimize = NULL, log = "y")
 }
 \arguments{
 \item{test_group}{Default \code{NULL}. The default behaviour is to average over all tests.}
