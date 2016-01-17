@@ -1,3 +1,6 @@
+## Version 0.1.2
+  * Update data set
+
 ## Version 0.1.1
   * Include OS and RAM in data set.
   * Include read/write benchmarks.
