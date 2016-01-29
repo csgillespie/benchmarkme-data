@@ -8,6 +8,13 @@ summarise_results = function(res) {
   tests = names(timings)
   values = as.vector(timings)
   
+  ## Try to determine parallel BLAS: non-standard R!
+  ## Compare user with elapsed time. If user >> elapsed, then parallel BLAS
+  ## Group by test_group 
+  user_times = tapply(results$user, results[, 5], sum)
+  elapsed_times = tapply(results$elapsed, results[, 5], sum)*1.1
+  blas_optimize = any(user_times > elapsed_times)
+  
   cpus = gsub("(?<=[\\s])\\s*|^\\s+$", "", res$cpu$model_name, perl=TRUE)
   ram = res$ram
   byte_optimize = as.vector(res$byte_compiler)
@@ -15,16 +22,25 @@ summarise_results = function(res) {
   r_major = res$r_version$major
   r_minor = res$r_version$minor
   
-  if(length(res$sys_info) ==1 && is.na(res$sys_info)){
-    sysname = release = NA
+  if(length(res$sys_info) == 1 && is.na(res$sys_info)) {
+    release = NA
+    if(length(res$platform_info) == 1 && is.na(res$platform_info)) {
+      sysname = NA
+    } else {
+      sysname = res$platform_info$OS.type
+    }
   } else{
     sysname = res$sys_info$sysname
     release = res$sys_info$release
   } 
+  
+  if(!is.na(sysname) && sysname == "windows") 
+    sysname = "Windows"
+  
   data.frame(id, date, time=timings, test_group=tests, 
              cpu=cpus, ram=as.numeric(ram), byte_optimize, 
              r_major, r_minor, 
-             sysname, release,
+             sysname, release, blas_optimize,
              stringsAsFactors = FALSE)
 }
 
@@ -37,3 +53,6 @@ make_data_set = function(from) {
   rownames(all_res) = 1:nrow(all_res)
   all_res
 }
+
+
+
