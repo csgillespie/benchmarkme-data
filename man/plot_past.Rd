@@ -5,13 +5,16 @@
 \title{Plot past results}
 \usage{
 plot_past(test_group = c("prog", "matrix_fun", "matrix_cal"),
-  byte_optimize = NULL, log = "y")
+  byte_optimize = NULL, blas_optimize = NULL, log = "y")
 }
 \arguments{
 \item{test_group}{Default \code{NULL}. The default behaviour is to average over all tests.}
 
 \item{byte_optimize}{Default \code{NULL}. The default behaviour is to plot all results.
 To plot only the byte optimized results, set to \code{TRUE}, otherwise \code{FALSE}.}
+
+\item{blas_optimize}{Default \code{NULL}. The default behaviour is to plot all results.
+To plot only the BLASS optimized results, set to \code{TRUE}, otherwise \code{FALSE}.}
 
 \item{log}{By default the y axis is plotted on the log scale. To change, set the 
 the argument equal to the empty parameter string, \code{""}.}
