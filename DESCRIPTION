@@ -1,7 +1,7 @@
 Package: benchmarkmeData
 Type: Package
 Title: Data Set for the Benchmarkme Packages
-Version: 0.1.2
+Version: 0.1.2.9000
 Date: 2016-01-17
 Authors@R: person(given="Colin", family="Gillespie",
     email="csgillespie@gmail.com", role = c("aut", "cre"))
@@ -10,7 +10,7 @@ Description: Output from the benchmarkme package.
 URL: https://github.com/csgillespie/benchmarkme-data
 BugReports: https://github.com/csgillespie/benchmarkme-data/issues
 LazyData: TRUE
-Imports: graphics, utils
-Suggests: testthat, DT
+Imports: graphics, utils, 
+Suggests: testthat, DT, shiny, ggplot2
 RoxygenNote: 5.0.1
 License: GPL-2 | GPL-3

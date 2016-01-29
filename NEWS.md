@@ -1,3 +1,8 @@
+## Version 0.1.3
+  * Updated data set
+  * Include byte-compile flag
+  * Added shiny interface (`shine`)
+
 ## Version 0.1.2
   * Update data set
 
