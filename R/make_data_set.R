@@ -1,3 +1,13 @@
+is_blas_optimize = function(results){
+  ## Try to determine parallel BLAS: non-standard R!
+  ## Compare user with elapsed time. If user >> elapsed, then parallel BLAS
+  ## Group by test_group 
+  user_times = tapply(results$user, results[, 5], sum)
+  elapsed_times = tapply(results$elapsed, results[, 5], sum)*1.1
+  blas_optimize = any(user_times > elapsed_times)
+  blas_optimize  
+}
+
 summarise_results = function(res) {
   id = res$id
   date = res$date
@@ -8,13 +18,7 @@ summarise_results = function(res) {
   tests = names(timings)
   values = as.vector(timings)
   
-  ## Try to determine parallel BLAS: non-standard R!
-  ## Compare user with elapsed time. If user >> elapsed, then parallel BLAS
-  ## Group by test_group 
-  user_times = tapply(results$user, results[, 5], sum)
-  elapsed_times = tapply(results$elapsed, results[, 5], sum)*1.1
-  blas_optimize = any(user_times > elapsed_times)
-  
+  blas_optimize = is_blas_optimize(results)
   cpus = gsub("(?<=[\\s])\\s*|^\\s+$", "", res$cpu$model_name, perl=TRUE)
   ram = res$ram
   byte_optimize = as.vector(res$byte_compiler)
