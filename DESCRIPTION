@@ -11,6 +11,6 @@ URL: https://github.com/csgillespie/benchmarkme-data
 BugReports: https://github.com/csgillespie/benchmarkme-data/issues
 LazyData: TRUE
 Imports: graphics, utils, 
-Suggests: testthat, DT, shiny, ggplot2
+Suggests: testthat, DT, shiny, ggplot2, benchmarkme
 RoxygenNote: 5.0.1
 License: GPL-2 | GPL-3
