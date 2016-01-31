@@ -4,12 +4,11 @@
 \alias{shine}
 \title{Shiny interface}
 \usage{
-shine(includecode = FALSE)
+shine(results = NULL)
 }
 \arguments{
-\item{includecode}{Logical. If \code{TRUE} the code
-included in the ui.R and server.R source files will
-be shown alongside the app.}
+\item{results}{Benchmark results, probably obtained via the 
+\code{benchmarkme} package.}
 }
 \description{
 This function uses shiny to explore the data.
