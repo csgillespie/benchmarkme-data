@@ -7,7 +7,6 @@
 #' be shown alongside the app.
 #' @export
 shine = function(includecode = FALSE){
-  
   if(!requireNamespace("shiny", quietly = TRUE)) 
     stop("Install shiny package to use shine.")
   if(!requireNamespace("ggplot2", quietly = TRUE))
