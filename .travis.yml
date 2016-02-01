@@ -7,6 +7,7 @@ before_install:
   - ./pkg-build.sh bootstrap
 
 install:
+  - ./pkg-build.sh install_github csgillespie/benchmarkme
   - ./pkg-build.sh install_r covr
   - ./pkg-build.sh install_deps
 
