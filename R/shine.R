@@ -32,11 +32,12 @@ shine = function(results=NULL){
     stop("Install shiny package to use shine.")
   if(!requireNamespace("ggplot2", quietly = TRUE))
     stop("Install ggplot2 package to use shine.")
+  if(!is.null(results))
+    .bme_env$results = tag_results(results)  
   
   appDir = system.file("shinyExamples", "plotting", package = "benchmarkmeData")
   if(nchar(appDir) == 0) {
     stop("Could not find example directory. Try reinstalling `benchmarkmeData`.", call. = FALSE)
   }
-  .bme_env$results = tag_results(results)  
   shiny::runApp(appDir)
 }
