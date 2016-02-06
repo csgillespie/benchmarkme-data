@@ -7,7 +7,7 @@ before_install:
   - ./pkg-build.sh bootstrap
 
 install:
-  - ./pkg-build.sh run_script -e 'install.packages("benchmarkme", repos=c("https://cran.rstudio.com/","http://csgillespie.github.io/drat/"))'
+  - ./pkg-build.sh run_script -e 'install.packages("benchmarkme", repos=c(getOption("repos"), "http://csgillespie.github.io/drat/"))'
   - ./pkg-build.sh install_r covr
   - ./pkg-build.sh install_deps
 
