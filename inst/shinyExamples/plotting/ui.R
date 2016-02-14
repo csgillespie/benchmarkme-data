@@ -2,7 +2,7 @@ library("shiny")
 ui_env = new.env()
 data(past_results, package="benchmarkmeData", envir=ui_env)
 
-opts = c("None", "Byte", "R Version", "OS", "BLAS")
+opts = c("None", "Byte Optimised", "R Version", "OS", "BLAS Optimised")
 ui = fluidPage(
   titlePanel("Benchmark data"),
   br(),

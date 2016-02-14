@@ -35,7 +35,7 @@ get_plot = function(past_results, results,
 # Change name on ui.R to colname
 lookup = function(facet_name) {
   to = c(".", "byte", "r_minor", "sysname", "blas")
-  from = c("None", "Byte", "R Version", "OS", "BLAS")
+  from = c("None", "Byte Optimised", "R Version", "OS", "BLAS Optimised")
   to[which(facet_name == from)]
 }
 
