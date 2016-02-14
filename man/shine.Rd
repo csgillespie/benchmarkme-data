@@ -11,6 +11,16 @@ shine(results = NULL)
 \code{benchmarkme} package.}
 }
 \description{
-This function uses shiny to explore the data.
+This function uses shiny to explore past benchmarks.
+If you pass a benchmark, say by running \code{benchmark_std()} your
+particular machine will be highlighted with a red dot.
+}
+\examples{
+\dontrun{
+shine()
+## Example results
+data(sample_results, package="benchmarkme")
+shine(sample_results)
+}
 }
 
