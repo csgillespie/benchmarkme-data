@@ -53,7 +53,7 @@ server = function(input, output){
   past_results = tmp_env$past_results
   
   
-  past_results$byte = ifelse(past_results$byte_optimize > 0.5, "Byte", "Not Byte")
+  past_results$byte = ifelse(past_results$byte_optimize > 0.5, "Byte Optimised", "Non-Byte Optimised")
   past_results$blas = ifelse(past_results$blas_optimize, "BLAS Optimised", "Standard")
   res = past_results
   
