@@ -8,4 +8,6 @@
 #' @author \email{csgillespie@gmail.com}
 #' @keywords package
 #' @seealso \url{https://github.com/csgillespie/benchmarkme-data}
+#' @examples 
+#' plot_past()
 NULL

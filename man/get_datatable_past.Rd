@@ -16,4 +16,8 @@ To plot only the byte optimized results, set to \code{TRUE}, otherwise \code{FAL
 \description{
 A summary of past results
 }
+\examples{
+## Need the DT package
+get_datatable_past()
+}
 

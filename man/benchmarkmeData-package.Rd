@@ -9,6 +9,9 @@
 This package contains the results from users running the 
 benchmarkme package.
 }
+\examples{
+plot_past()
+}
 \author{
 \email{csgillespie@gmail.com}
 }

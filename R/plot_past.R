@@ -20,6 +20,12 @@
 #' @importFrom utils data
 #' @importFrom stats aggregate
 #' @export
+#' @examples 
+#' ## Plot all past results
+#' plot_past()
+#' 
+#' ## Plot the blas_optimized results
+#' plot_past(blas_optimize=TRUE)
 plot_past = function(test_group=c("prog", "matrix_fun", "matrix_cal"), 
                      byte_optimize=NULL, blas_optimize=NULL,
                      log="y") {
