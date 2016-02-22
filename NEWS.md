@@ -1,3 +1,7 @@
+## Version 0.2.1
+  * Match benchmarkme version.
+  * First version on CRAN
+
 ## Version 0.1.3
   * Updated data set
   * Include byte-compile flag
