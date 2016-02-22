@@ -18,6 +18,7 @@
 #' plot_past(byte_optimize=FALSE)
 #' @importFrom graphics abline grid par plot points
 #' @importFrom utils data
+#' @importFrom stats aggregate
 #' @export
 plot_past = function(test_group=c("prog", "matrix_fun", "matrix_cal"), 
                      byte_optimize=NULL, blas_optimize=NULL,
