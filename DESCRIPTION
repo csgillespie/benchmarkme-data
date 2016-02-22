@@ -14,4 +14,4 @@ Imports: graphics, utils,
 Suggests: testthat, DT, shiny, ggplot2, benchmarkme
 RoxygenNote: 5.0.1
 License: GPL-2 | GPL-3
-Additional_repositories: https://github.com/csgillespie/drat/tree/gh-pages
+Additional_repositories: http://csgillespie.github.io/drat/
