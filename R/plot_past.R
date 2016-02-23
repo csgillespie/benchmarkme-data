@@ -27,7 +27,8 @@ nice_palette = function(){
 #' @examples 
 #' ## Plot non byte optimize code
 #' plot_past(byte_optimize=FALSE)
-#' @importFrom graphics abline grid par plot points
+#' @importFrom graphics abline grid par plot points legend
+#' @importFrom grDevices palette rgb
 #' @importFrom utils data
 #' @importFrom stats aggregate
 #' @export
