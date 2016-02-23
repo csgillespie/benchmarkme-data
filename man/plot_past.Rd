@@ -4,11 +4,11 @@
 \alias{plot_past}
 \title{Plot past results}
 \usage{
-plot_past(test_group = c("prog", "matrix_fun", "matrix_cal"),
+plot_past(test_group = c("prog", "matrix_fun", "matrix_cal", "read", "write"),
   byte_optimize = NULL, blas_optimize = NULL, log = "y")
 }
 \arguments{
-\item{test_group}{Default \code{NULL}. The default behaviour is to average over all tests.}
+\item{test_group}{One of "prog", "matrix_fun", "matrix_cal", "read", "write". Default it \code{prog}.}
 
 \item{byte_optimize}{Default \code{NULL}. The default behaviour is to plot all results.
 To plot only the byte optimized results, set to \code{TRUE}, otherwise \code{FALSE}.}

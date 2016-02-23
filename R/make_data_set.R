@@ -1,7 +1,11 @@
+#' BLAS optimize
+#' 
+#' Try to determine parallel BLAS, which implies non-standard R!
+#' Compare user with elapsed time. If user >> elapsed, then parallel BLAS
+#' @param results The output from a \code{benchmark_*} call.
+#' @export
 is_blas_optimize = function(results){
-  ## Try to determine parallel BLAS: non-standard R!
-  ## Compare user with elapsed time. If user >> elapsed, then parallel BLAS
-  ## Group by test_group 
+  ## 
   user_times = tapply(results$user, results[, 5], sum)
   elapsed_times = tapply(results$elapsed, results[, 5], sum)*1.1
   blas_optimize = any(user_times > elapsed_times)

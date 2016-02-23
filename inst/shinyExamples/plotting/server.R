@@ -51,7 +51,7 @@ server = function(input, output){
   tmp_env = new.env()
   data(past_results, package="benchmarkmeData", envir=tmp_env)
   past_results = tmp_env$past_results
-  
+  test = past_results$test_group[1]
   
   past_results$byte = ifelse(past_results$byte_optimize > 0.5, "Byte Optimised", "Non-Byte Optimised")
   past_results$blas = ifelse(past_results$blas_optimize, "BLAS Optimised", "Standard")
@@ -59,10 +59,12 @@ server = function(input, output){
   
   results = get("results", envir=benchmarkmeData:::.bme_env)
   if(!is.null(results)) {
-    results$byte = ifelse(results$byte_optimize > 0.5, "Byte", "Not Byte")
+    results$byte = ifelse(results$byte_optimize > 0.5, "Byte Optimised", "Not Byte Optimised")
     results$blas = ifelse(results$blas_optimize, "BLAS Optimised", "Standard")
+    test = results$test_group[1]
   }
-  rv = reactiveValues(plot = get_plot(res, results), 
+  
+  rv = reactiveValues(plot = get_plot(res, results, test=test), 
                       facet_x = "None", facet_y = "None")
   
   observeEvent(input$facet_x, 

@@ -1,3 +1,14 @@
+nice_palette = function(){
+  alpha =150
+  palette(c(rgb(85,130,169, alpha=alpha, maxColorValue=255),
+            rgb(200,79,178, alpha=alpha,maxColorValue=255), 
+            rgb(105,147,45, alpha=alpha, maxColorValue=255),
+            rgb(204,74,83, alpha=alpha, maxColorValue=255),
+            rgb(183,110,39, alpha=alpha, maxColorValue=255),
+            rgb(131,108,192, alpha=alpha, maxColorValue=255)))
+}
+
+
 #' Plot past results
 #' 
 #' Plot the previous benchmarks. This function creates two figures.
@@ -6,7 +17,7 @@
 #' \item Figure 2: Relative time (compared to the smallest benchmark).
 #' }
 #' The data set used is \code{data(past_results)}.
-#' @param test_group Default \code{NULL}. The default behaviour is to average over all tests. 
+#' @param test_group One of "prog", "matrix_fun", "matrix_cal", "read", "write". Default it \code{prog}.
 #' @param byte_optimize Default \code{NULL}. The default behaviour is to plot all results.
 #' To plot only the byte optimized results, set to \code{TRUE}, otherwise \code{FALSE}.
 #' @param blas_optimize Default \code{NULL}. The default behaviour is to plot all results.
@@ -26,53 +37,42 @@
 #' 
 #' ## Plot the blas_optimized results
 #' plot_past(blas_optimize=TRUE)
-plot_past = function(test_group=c("prog", "matrix_fun", "matrix_cal"), 
+plot_past = function(test_group=c("prog", "matrix_fun", "matrix_cal", 
+                                  "read", "write"), 
                      byte_optimize=NULL, blas_optimize=NULL,
                      log="y") {
-  ## Load past data
-  tmp_env = new.env()
-  data(past_results, package="benchmarkmeData", envir = tmp_env)
-  results = tmp_env$past_results
   
-  if(!is.null(byte_optimize)) {
-    if(byte_optimize) {
-      results = results[results$byte_optimize > 0.5,]
-    } else {
-      results = results[results$byte_optimize < 0.5,]
-    }
-  }
-  
-  if(!is.null(blas_optimize)) {
-    results = results[results$blas_optimize==blas_optimize,]
-  }
 
-  if(is.null(test_group)) test_group = unique(results$test_group)
-  results = results[results$test_group %in% test_group,]
+  results = select_results(test_group, byte_optimize, blas_optimize)
   
-  ## Aggregate over test
-  ## Ensure that we have timings for all required tests.
-  results = aggregate(time ~ id + byte_optimize + cpu + date + sysname + blas_optimize, 
-                      data=results, 
-                      FUN=function(i) ifelse(length(i) == length(test_group), sum(i), NA))
-  results = results[!is.na(results$time), ]
-  results = results[order(results$time), ]
-  ## Sort plot
+  
+  ## Arrange plot colours and layout
   op = par(mar=c(3,3,2,1), 
            mgp=c(2,0.4,0), tck=-.01,
            cex.axis=0.8, las=1, mfrow=c(1,2)) 
-  on.exit(op)
+  old_pal = palette()
+  on.exit({palette(old_pal); par(op)})
+  nice_palette()
+  
+  
   ymin = min(results$time)
   ymax = max(results$time)
   plot(results$time, xlab="Rank", ylab="Total timing (secs)", 
-       ylim=c(ymin, ymax), xlim=c(1, nrow(results)+1), 
-       panel.first=grid(), log=log)
+       ylim=c(ymin, ymax), xlim=c(1, nrow(results)+1), cex=0.9,
+       panel.first=grid(), log=log, pch=21, bg=as.numeric(results$test_group))
+  
+  if(any(c("read5", "write5") %in% results$test_group)) {
+    legend("topleft", pt.bg=1:4, 
+           pch=21, legend = levels(results$test_group), 
+           bty="n")
+  }
   
   ## Relative timings  
   fastest = min(results$time)
   ymax = ymax/fastest
   plot(results$time/fastest, xlab="Rank", ylab="Relative timing", 
-       ylim=c(1, ymax), xlim=c(1, nrow(results)+1), 
-       panel.first=grid(), log=log)
+       ylim=c(1, ymax), xlim=c(1, nrow(results)+1), cex=0.9,
+       panel.first=grid(), log=log, pch=21, bg=as.numeric(results$test_group))
   abline(h=1, lty=3)
   
   invisible(results)

@@ -5,45 +5,25 @@
 #' @export
 #' @examples 
 #' ## Need the DT package
+#' ## View all results for prog test
 #' get_datatable_past()
-get_datatable_past = function(test_group=c("prog", "matrix_fun", "matrix_cal"), 
-                              byte_optimize=NULL) {
+#' ## View matrix_fun test
+#' get_datatable_past("matrix_fun")
+#' ## View matrix_fun test - only BLAS results
+#' get_datatable_past("matrix_fun", blas_optimize=TRUE)
+get_datatable_past = function(test_group=c("prog", "matrix_fun", "matrix_cal", 
+                                           "read", "write"), 
+                              byte_optimize=NULL, blas_optimize=NULL) {
   if(!requireNamespace("DT", quietly = TRUE))
     stop("Install DT package to use datatable")
 
-  ## Load past data
-  tmp_env = new.env()
-  data(past_results, package="benchmarkmeData", envir = tmp_env)
-  results = tmp_env$past_results
-  
-  if(!is.null(byte_optimize)){
-    if(byte_optimize) {
-      results = results[results$byte_optimize > 0.5,]
-    } else {
-      results = results[results$byte_optimize < 0.5,]
-    }
-  }
-  
-  if(is.null(test_group)) test_group = unique(results$test_group)
-  results = results[results$test_group %in% test_group,]
-  
-  ## Aggregate over test
-  ## Ensure that we have timings for all required tests.
-  results = aggregate(time ~ id + byte_optimize + cpu + date + sysname, 
-                      data=results, 
-                      FUN=function(i) ifelse(length(i) == length(test_group), sum(i), NA))
-  results = results[!is.na(results$time), ]
-  
+  results = select_results(test_group, byte_optimize, blas_optimize)
   results$time = signif(results$time, 4)
-  results = results[order(results$time), ]
-  results$rank = 1:nrow(results)
-  colnames(results)
-  if(is.null(byte_optimize)){
-    results = results[,c("rank", "time", "cpu", "byte_optimize", "sysname")]
-    colnames(results) = c("Rank", "Time (sec)", "CPU", "Byte Compile", "OS")
-  } else {
-    results = results[,c("rank", "time", "cpu", "sysname")]
-    colnames(results) = c("Rank", "Time (sec)", "CPU", "OS")
-  }
+  
+  ## Format
+  results = results[,c("rank", "time", "cpu", "byte_optimize", "blas_optimize", "sysname", "test_group")]
+  colnames(results) = c("Rank", "Time (sec)", "CPU", "Byte Compile", "BLAS Opt", "OS", "Test")
+  results = results[,c(TRUE, TRUE, TRUE, is.null(byte_optimize), is.null(blas_optimize), 
+                       TRUE, length(unique(results$Test)) > 1)]
   DT::datatable(results, rownames=FALSE) 
 }
