@@ -1,3 +1,6 @@
+## Version 0.2.2
+  * Add quotes to `benchmarkme` in DESCRIPTION file.
+  
 ## Version 0.2.1
   * Match benchmarkme version.
   * First version on CRAN
