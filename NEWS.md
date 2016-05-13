@@ -1,3 +1,6 @@
+## Version 0.3.0
+  * Updated data set
+
 ## Version 0.2.2
   * Add quotes to `benchmarkme` in DESCRIPTION file.
   
