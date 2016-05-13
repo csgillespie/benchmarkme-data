@@ -11,7 +11,8 @@ shine(results = NULL)
 \code{benchmarkme} package.}
 }
 \description{
-This function uses shiny to explore past benchmarks.
+This function uses the shiny package to explore past benchmarks.
+The interface is launched via \code{shine()}
 If you pass a benchmark, say by running \code{benchmark_std()} your
 particular machine will be highlighted with a red dot.
 }
