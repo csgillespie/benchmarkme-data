@@ -23,7 +23,7 @@ summarise_results = function(res) {
   values = as.vector(timings)
   
   blas_optimize = is_blas_optimize(results)
-  cpus = gsub("(?<=[\\s])\\s*|^\\s+$", "", res$cpu$model_name, perl=TRUE)
+  cpus = gsub("(?<=[\\s])\\s*|^\\s+$", "", unique(res$cpu$model_name), perl=TRUE)
   ram = res$ram
   byte_optimize = as.vector(res$byte_compiler)
   
@@ -31,7 +31,7 @@ summarise_results = function(res) {
   r_minor = res$r_version$minor
   
   if(length(res$sys_info) == 1 && is.na(res$sys_info)) {
-    release = NA
+      release = NA
     if(length(res$platform_info) == 1 && is.na(res$platform_info)) {
       sysname = NA
     } else {
