@@ -2,7 +2,7 @@
 % Please edit documentation in R/select_results.R
 \name{select_results}
 \alias{select_results}
-\title{Convenience function for selecting}
+\title{Selecting results}
 \usage{
 select_results(test_group, byte_optimize = NULL, blas_optimize = NULL)
 }
@@ -19,9 +19,11 @@ To plot only the BLASS optimized results, set to \code{TRUE}, otherwise \code{FA
 A data frame
 }
 \description{
-Selects, aggregates over the \code{past_results} data set.
+Selects and  aggregates over the \code{past_results} data set.
+This function just performs simple data frame subsetting.
 }
 \examples{
 select_results("prog", byte_optimize=TRUE)
+select_results("matrix_fun", blas_optimize=TRUE)
 }
 

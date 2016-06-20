@@ -1,11 +1,13 @@
-#' Convenience function for selecting
+#' Selecting results
 #' 
-#' Selects, aggregates over the \code{past_results} data set.
+#' Selects and  aggregates over the \code{past_results} data set.
+#' This function just performs simple data frame subsetting.
 #' @return A data frame
 #' @inheritParams plot_past
 #' @export
 #' @examples 
 #' select_results("prog", byte_optimize=TRUE)
+#' select_results("matrix_fun", blas_optimize=TRUE)
 select_results = function(test_group, byte_optimize=NULL, blas_optimize=NULL) {
   ## Load past data
   tmp_env = new.env()

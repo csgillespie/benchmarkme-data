@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_past.R
 \name{plot_past}
 \alias{plot_past}
-\title{Plot past results}
+\title{Scatter plot of past benchmarks}
 \usage{
 plot_past(test_group = c("prog", "matrix_fun", "matrix_cal", "read", "write"),
   byte_optimize = NULL, blas_optimize = NULL, log = "y")
