@@ -37,7 +37,7 @@ tag_results = function(results){
 #' shine(sample_results)
 #' }
 #' @export
-shine = function(results=NULL){
+shine = function(results = NULL){
   if(!requireNamespace("shiny", quietly = TRUE)) 
     stop("Install shiny package to use shine.")
   if(!requireNamespace("ggplot2", quietly = TRUE))

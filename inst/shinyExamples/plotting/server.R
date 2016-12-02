@@ -59,7 +59,7 @@ server = function(input, output){
   
   results = get("results", envir=benchmarkmeData:::.bme_env)
   if(!is.null(results)) {
-    results$byte = ifelse(results$byte_optimize > 0.5, "Byte Optimised", "Not Byte Optimised")
+    results$byte = ifelse(results$byte_optimize > 0.5, "Byte Optimised", "Non-Byte Optimised")
     results$blas = ifelse(results$blas_optimize, "BLAS Optimised", "Standard")
     test = results$test_group[1]
   }
