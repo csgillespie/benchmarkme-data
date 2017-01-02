@@ -17,7 +17,8 @@ get_datatable_past = function(test_group=c("prog", "matrix_fun", "matrix_cal",
   if(!requireNamespace("DT", quietly = TRUE))
     stop("Install DT package to use datatable")
 
-  results = select_results(test_group, byte_optimize, blas_optimize)
+  results = select_results(test_group, byte_optimize = byte_optimize, 
+                           blas_optimize = blas_optimize)
   results$time = signif(results$time, 4)
   
   ## Format

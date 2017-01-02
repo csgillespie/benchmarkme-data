@@ -25,6 +25,6 @@ Files where the results are \code{NULL} are moved to a sub-directory (called)
 \code{empty} in the \code{to} directory. If the \code{empty} directory doesn't 
 exist, it is created.
 
-Currently these functions are specfic to my set-up.
+Currently these functions are specific to my set-up.
 }
 

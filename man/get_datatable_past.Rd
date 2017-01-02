@@ -14,7 +14,7 @@ get_datatable_past(test_group = c("prog", "matrix_fun", "matrix_cal", "read",
 To plot only the byte optimized results, set to \code{TRUE}, otherwise \code{FALSE}.}
 
 \item{blas_optimize}{Default \code{NULL}. The default behaviour is to plot all results.
-To plot only the BLASS optimized results, set to \code{TRUE}, otherwise \code{FALSE}.}
+To plot only the BLAS optimized results, set to \code{TRUE}, otherwise \code{FALSE}.}
 }
 \description{
 A summary of past results

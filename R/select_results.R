@@ -1,19 +1,24 @@
 #' Selecting results
 #' 
-#' Selects and  aggregates over the \code{past_results} data set.
-#' This function just performs simple data frame subsetting.
+#' Selects and aggregates over the \code{past_results} data set or the 
+#' \code{results} input data set..
 #' @return A data frame
+#' @param results Default \code{NULL}. If \code{NULL} the \code{past_results}
+#' data set is used. Otherwise, the input data set.
 #' @inheritParams plot_past
 #' @export
 #' @examples 
 #' select_results("prog", byte_optimize=TRUE)
 #' select_results("matrix_fun", blas_optimize=TRUE)
-select_results = function(test_group, byte_optimize=NULL, blas_optimize=NULL) {
+select_results = function(test_group, 
+                          results = NULL,
+                          byte_optimize=NULL, 
+                          blas_optimize=NULL) {
   ## Load past data
   tmp_env = new.env()
   data(past_results, package="benchmarkmeData", envir = tmp_env)
-  results = tmp_env$past_results
-  
+  results = rbind(tmp_env$past_results, results)
+
   if(!is.null(byte_optimize)) {
     if(byte_optimize) {
       results = results[results$byte_optimize > 0.5,]
@@ -33,7 +38,8 @@ select_results = function(test_group, byte_optimize=NULL, blas_optimize=NULL) {
   
   ## Aggregate over test
   ## Ensure that we have timings for all required tests.
-  results = aggregate(time ~ id + byte_optimize + cpu + date + sysname + blas_optimize + test_group, 
+  results = aggregate(time ~ id + byte_optimize + cpu + date + 
+                        sysname + blas_optimize + test_group + ram, 
                       data=results, 
                       FUN=sum)
   results = results[!is.na(results$time), ]

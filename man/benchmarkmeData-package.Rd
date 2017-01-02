@@ -14,10 +14,6 @@ and \code{shine()}.
 plot_past()
 ## Need the DT package
 get_datatable_past()
-## Need the shiny package
-\dontrun{
-shine()
-}
 }
 \author{
 \email{csgillespie@gmail.com}

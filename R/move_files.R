@@ -20,7 +20,7 @@ get_empty_results = function(from) {
 #' \code{empty} in the \code{to} directory. If the \code{empty} directory doesn't 
 #' exist, it is created.
 #' 
-#' Currently these functions are specfic to my set-up.
+#' Currently these functions are specific to my set-up.
 #' @param from A directory containing the uploaded results.
 #' @param to Destination directory
 #' @export

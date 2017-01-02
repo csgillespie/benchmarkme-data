@@ -1,0 +1,286 @@
+---
+title: "Benchmarkme"
+author: "Colin Gillespie"
+runtime: shiny
+output: 
+  flexdashboard::flex_dashboard:
+    css: style.css
+---
+
+<!-- drat::addRepo("csgillespie") -->
+<!-- rsconnect::deployApp(appDir = "~/github/benchmarkme-data/inst/shinyapps_io/",  -->
+<!--                      account="jumpingrivers", server = "shinyapps.io",  -->
+<!--                      appTitle = "benchmarkme" -->
+<!--                     ) -->
+
+
+```{r setup, include=FALSE}
+library("shiny")
+library("flexdashboard")
+library(benchmarkmeData)
+#library(benchmarkme)
+data("past_results", package="benchmarkmeData")
+source("functions.R")
+```
+
+Selections {.sidebar}
+===============================
+
+Select the machines you are interested in
+
+```{r}
+## The shiny part
+selectInput("byte", "Byte compiled", 
+            c("All", "Standard", "Optimised"))
+selectInput("blas", "Blas", 
+            c("All", "Standard", "Optimised"))
+selectInput("os", "Operating system", 
+            c("All", "Linux", "Apple", "Windows", "Unix"))
+
+selectInput("test", "Benchmark test", 
+        c("Programming", "Matrix functions", "Matrix calulations", 
+          "Read 5MB", "Read 50MB","Read 200MB",
+          "Write 5MB", "Write 50MB", "Write 200MB"))
+fileInput("results", "Upload results file")
+
+r = c(0.1, 100)
+user_rank = NULL
+results = reactive({
+  if(!is.null(input$results)) {
+    user_data = readRDS(file = input$results$datapath)
+    user_results = summarise_results(user_data)
+    all_results = rbind(past_results, user_results)
+    user_id = unique(user_data$id)
+  } else {
+    all_results = past_results
+    user_id = NULL
+  }
+  #res = select_results("prog", all_results)
+  res = select_results(get_test(input$test), all_results)
+  res$is_user = FALSE
+  res$is_user[res$id == user_id] = TRUE
+  res = clean_table(res)
+  
+  r <<- range(res$time) ## axis range
+  blas = get_option(input$blas)
+  if(!is.null(blas)) {
+    res = res[res$blas_optimize == blas,]
+  }
+  byte = get_option(input$byte)
+  if(!is.null(byte)) {
+    res = res[res$byte_optimize == byte,]
+  }
+  
+  if(input$os != "All") {
+    res = res[res$sysname == input$os,]
+  }
+
+  colnames(res) = c("Rank", "Time (sec)", "CPU",
+                       "Byte Compile", "BLAS Opt", "OS", "RAM (GB)", "Test", "is_user")
+
+  res = res[,c(TRUE, TRUE, TRUE,
+                is.null(byte), is.null(blas), input$os == "All", TRUE,
+                input$Test == "All",  TRUE, TRUE)]
+  res$Rank = 1:nrow(res)
+  res
+  })
+br()
+
+renderUI({
+  ret = NULL
+  user_rank = which(results()$is_user)
+
+  if(!is.null(input$results)) {
+     ret = paste(ret, "File uploaded.", br(), br())
+
+      if(sum(user_rank) > 0) {
+        ret = paste(ret, "Your machine is ranked", user_rank, "out of",
+                    nrow(results()), "machines")
+      } else {
+        ret = paste(ret, br(), "For your current selection, your own
+                machine isn't displayed")
+      }
+  }
+  HTML(ret)
+  })
+
+div(class="div-wrapper",
+  a(href="http://www.jumpingrivers.com",
+    img(src = "logo.png", style="width:150px;")
+    )
+)
+```
+
+
+
+Tabular
+===================================== 
+
+### Top machines
+
+```{r}
+DT::renderDataTable({
+  r = results()
+  data_table = DT::datatable(results()[,-ncol(r)], rownames=FALSE) 
+  if(sum(r$is_user) > 0) {
+    DT::formatStyle(data_table, "Rank",
+                  backgroundColor = DT::styleEqual(which(r$is_user), "orange"))
+  } else {
+    data_table
+  }
+})
+```
+
+Graphics
+===================================== 
+
+### Absolute time 
+
+```{r}
+library(plotly)
+renderPlotly({
+  res = results()
+  
+  res$size = res$is_user + 6
+  res$size[res$is_user] =  16
+  res$colour = "black"
+  res$color[res$is_user] = "steelblue"
+  plot_ly(res, x = ~Rank, y = ~`Time (sec)`, type="scatter",
+  marker = list(color = ~color, width=10, size=~size),           
+#          color= ~is_user, size=~size, 
+        text = ~paste("CPU: ", CPU)) %>%
+     layout(yaxis = list(type = "log", title = "Time (sec)"))
+})
+```
+
+### Relative time
+
+```{r}
+library(plotly)
+renderPlotly({
+  relative = (results()$`Time (sec)`)/min(results()$`Time (sec)`)
+  plot_ly(results(), x = ~Rank, y = ~relative,
+        text = ~paste("CPU: ", CPU)) %>%
+     layout(yaxis = list(type = "log", title = "Relative time"))
+  
+
+})
+```
+
+Machine Summary
+===================================== 
+
+
+Column 1 
+------------------------------------
+
+### CPUs 
+
+```{r}
+total = function(i) sum(i > 0, na.rm = TRUE)
+renderPlotly({
+  i3 = total(regexpr("i3", results()$CPU))
+  i5 = total(regexpr("i5", results()$CPU))
+  i7 = total(regexpr("i7", results()$CPU))
+  xeon = total(regexpr("Xeon", results()$CPU))
+  amd = total(regexpr("AMD", results()$CPU))
+  plot_ly(
+    x = c(paste("Intel", c("i3", "i5", "i7", "Xeon")), "AMD"),
+    y = c(i3, i5, i7, xeon, amd),
+    name = "CPU distribution",
+    type = "bar"
+  )
+})
+```
+
+### RAM 
+
+```{r}
+
+renderPlotly({
+  ram = table(results()$`RAM (GB)`)
+  n = as.numeric(as.character(names(ram)))
+  x_axis = factor(n)
+
+#barplot(as.vector(tab), names.arg = 2^n)
+  plot_ly(
+    x = x_axis,
+    y = ram,
+    name = "CPU distribution",
+    type = "bar"
+  )
+})
+```
+
+<!-- Column 2 -->
+<!-- ------------------------------------ -->
+
+### Operating system
+
+```{r}
+total = function(i) sum(i > 0, na.rm = TRUE)
+renderPlotly({
+  OS = sort(table(results()$OS))
+  nam = as.character(names(OS))
+  
+  plot_ly(
+    x = nam,
+    y = as.vector(OS),
+    name = "OS distribution",
+    type = "bar"
+  )
+})
+```
+
+
+Benchmark description
+===================================== 
+
+### Overview 
+
+There are two main benchmarks in this package:
+
+  * `benchmark_std()`
+    - This consists of three sub benchmarks: `benchmark_prog`, 
+    `benchmark_matrix_cal`, and `benchmark_matrix_fun`
+  * `benchmark_io()`
+    - This consists of two sub benchmarks: `read` and `write`.
+
+#### Programming benchmarks 
+
+The `benchmark_prog` benchmark consists of timing five matrix programming operations: 
+
+  * $3,500,000$ Fibonacci numbers calculation (vector calc) - `bm_prog_fib`.
+  * Creation of a $3500 \times 3500$ Hilbert matrix (matrix calc) - `bm_prog_hilbert`.
+  * Grand common divisors of $1,000,000$ pairs (recursion) - `bm_prog_gcd`.
+  * Creation of a $1600\times 1600$ Toeplitz matrix (loops) - `bm_prog_toeplitz`.
+  * Escoufier's method on a $60\times 60$ matrix (mixed) - `bm_prog_escoufier`.
+
+#### Matrix calulations
+
+A collection of matrix benchmark functions aimed at assessing the calculation speed.
+
+  * Creation, transp., deformation of a $2500\times 2500$ matrix - `bm_matrix_cal_manip`.
+  * $2500\times2500$ normal distributed random matrix ^1000 - `bm_matrix_cal_power`.
+  * Sorting of $7,000,000$ random values - `bm_matrix_cal_sort`.
+  * $2500\times 2500$ cross-product matrix ($b = a' \times a$) - `bm_matrix_cal_cross_product`
+  * Linear regression over a $3000 \times 3000$ matrix - `bm_matrix_cal`.
+
+#### Matrix functions
+
+A collection of matrix benchmark functions
+
+  * FFT over $2,500,000$ random values - `bm_matrix_fun_fft`.
+  * Eigenvalues of a $640\times 640$ random matrix - `bm_matrix_fun_eigen`.
+  * Determinant of a $2500 \times 2500$ random matrix - `bm_matrix_fun_determinant`.
+  * Cholesky decomposition of a $3000 \times 3000$ matrix - `bm_matrix_fun_cholesky`.
+  * Inverse of a $1600 \times 1600$ random matrix - `bm_matrix_fun_inverse`.
+
+#### Input/Output
+
+  * Reading a $5$, $50$ and $200$MB csv file
+  * Writing a $5$, $50$ and $200$MB csv file
+  
+The purpose of this benchmark isn't to compare `write.csv` to another package. Instead, 
+we went to assess your machine.
+

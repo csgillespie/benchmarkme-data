@@ -12,6 +12,10 @@ is_blas_optimize = function(results){
   blas_optimize  
 }
 
+
+#' @rdname select_results
+#' @param res A list containing benchmark results and system information.
+#' @export
 summarise_results = function(res) {
   id = res$id
   date = res$date

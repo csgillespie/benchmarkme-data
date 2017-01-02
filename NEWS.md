@@ -1,3 +1,7 @@
+## Version 0.4.0
+  * Moved shiny interface to shinyapps.io
+  * Updated data set
+
 ## Version 0.3.1
   * Updated data set
   
