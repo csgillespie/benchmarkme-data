@@ -22,7 +22,7 @@ A summary of past results
 \examples{
 ## Need the DT package
 ## View all results for prog test
-get_datatable_past()
+get_datatable_past("prog")
 ## View matrix_fun test
 get_datatable_past("matrix_fun")
 ## View matrix_fun test - only BLAS results

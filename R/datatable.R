@@ -8,13 +8,15 @@
 #' @examples 
 #' ## Need the DT package
 #' ## View all results for prog test
-#' get_datatable_past()
+#' get_datatable_past("prog")
 #' ## View matrix_fun test
 #' get_datatable_past("matrix_fun")
 #' ## View matrix_fun test - only BLAS results
 #' get_datatable_past("matrix_fun", blas_optimize=TRUE)
 get_datatable_past = function(test_group, 
                               byte_optimize=NULL, blas_optimize = NULL) {
+  .Deprecated(msg = "This function is deprecated and will be
+              removed in the next version. See https://jumpingrivers.shinyapps.io/benchmarkme/")
   if(!requireNamespace("DT", quietly = TRUE))
     stop("Install DT package to use datatable")
   
