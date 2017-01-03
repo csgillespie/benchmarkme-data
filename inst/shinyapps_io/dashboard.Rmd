@@ -1,24 +1,24 @@
 ---
 title: "Benchmarkme"
-author: "Colin Gillespie"
 runtime: shiny
 output: 
   flexdashboard::flex_dashboard:
     css: style.css
+    favicon: favicon.png
 ---
-
-<!-- drat::addRepo("csgillespie") -->
-<!-- rsconnect::deployApp(appDir = "~/github/benchmarkme-data/inst/shinyapps_io/",  -->
-<!--                      account="jumpingrivers", server = "shinyapps.io",  -->
-<!--                      appTitle = "benchmarkme" -->
-<!--                     ) -->
-
+```{r include=FALSE, eval=FALSE}
+drat::addRepo("csgillespie")
+rsconnect::deployApp(appDir = "~/github/benchmarkme-data/inst/shinyapps_io/",
+                     account="jumpingrivers", server = "shinyapps.io",
+                     appTitle = "benchmarkme"
+                    )
+```
 
 ```{r setup, include=FALSE}
 library("shiny")
 library("flexdashboard")
-library(benchmarkmeData)
-#library(benchmarkme)
+library("benchmarkmeData")
+library("plotly")
 data("past_results", package="benchmarkmeData")
 source("functions.R")
 ```
@@ -43,7 +43,6 @@ selectInput("test", "Benchmark test",
           "Write 5MB", "Write 50MB", "Write 200MB"))
 fileInput("results", "Upload results file")
 
-r = c(0.1, 100)
 user_rank = NULL
 results = reactive({
   if(!is.null(input$results)) {
@@ -56,24 +55,17 @@ results = reactive({
     user_id = NULL
   }
   #res = select_results("prog", all_results)
-  res = select_results(get_test(input$test), all_results)
+  res = select_results("read5", all_results)
+  blas = get_option(input$blas)
+  byte = get_option(input$byte)
+  res = select_results(get_test(input$test), all_results, 
+                       byte_optimize = byte, 
+                       blas_optimize = blas)
   res$is_user = FALSE
   res$is_user[res$id == user_id] = TRUE
   res = clean_table(res)
   
-  r <<- range(res$time) ## axis range
-  blas = get_option(input$blas)
-  if(!is.null(blas)) {
-    res = res[res$blas_optimize == blas,]
-  }
-  byte = get_option(input$byte)
-  if(!is.null(byte)) {
-    res = res[res$byte_optimize == byte,]
-  }
-  
-  if(input$os != "All") {
-    res = res[res$sysname == input$os,]
-  }
+  if(input$os != "All") res = res[res$sysname == input$os,]
 
   colnames(res) = c("Rank", "Time (sec)", "CPU",
                        "Byte Compile", "BLAS Opt", "OS", "RAM (GB)", "Test", "is_user")
@@ -81,7 +73,7 @@ results = reactive({
   res = res[,c(TRUE, TRUE, TRUE,
                 is.null(byte), is.null(blas), input$os == "All", TRUE,
                 input$Test == "All",  TRUE, TRUE)]
-  res$Rank = 1:nrow(res)
+  if(nrow(res) > 0) res$Rank = 1:nrow(res)
   res
   })
 br()
@@ -97,7 +89,7 @@ renderUI({
         ret = paste(ret, "Your machine is ranked", user_rank, "out of",
                     nrow(results()), "machines")
       } else {
-        ret = paste(ret, br(), "For your current selection, your own
+        ret = paste(ret, br(), "For the current selection, your own
                 machine isn't displayed")
       }
   }
@@ -112,8 +104,7 @@ div(class="div-wrapper",
 ```
 
 
-
-Tabular
+Table
 ===================================== 
 
 ### Top machines
@@ -140,16 +131,20 @@ Graphics
 library(plotly)
 renderPlotly({
   res = results()
-  
-  res$size = res$is_user + 6
-  res$size[res$is_user] =  16
-  res$colour = "black"
-  res$color[res$is_user] = "steelblue"
+  if(nrow(res) > 0) {
+    res$size = res$is_user + 6
+    res$size[res$is_user] =  16
+    res$colour = "black"
+    res$colour[res$is_user] = "steelblue"
+ 
   plot_ly(res, x = ~Rank, y = ~`Time (sec)`, type="scatter",
-  marker = list(color = ~color, width=10, size=~size),           
+  marker = list(color = ~colour, width=10, size=~size),           
 #          color= ~is_user, size=~size, 
         text = ~paste("CPU: ", CPU)) %>%
      layout(yaxis = list(type = "log", title = "Time (sec)"))
+  } else {
+    plot_ly()
+  } 
 })
 ```
 
@@ -158,18 +153,21 @@ renderPlotly({
 ```{r}
 library(plotly)
 renderPlotly({
+  if(nrow(results()) > 0) {
   relative = (results()$`Time (sec)`)/min(results()$`Time (sec)`)
   plot_ly(results(), x = ~Rank, y = ~relative,
         text = ~paste("CPU: ", CPU)) %>%
      layout(yaxis = list(type = "log", title = "Relative time"))
+  } else {
+    plot_ly()
+  }
   
 
 })
 ```
 
-Machine Summary
+Machine summary
 ===================================== 
-
 
 Column 1 
 ------------------------------------
@@ -201,14 +199,10 @@ renderPlotly({
   ram = table(results()$`RAM (GB)`)
   n = as.numeric(as.character(names(ram)))
   x_axis = factor(n)
-
-#barplot(as.vector(tab), names.arg = 2^n)
   plot_ly(
-    x = x_axis,
-    y = ram,
-    name = "CPU distribution",
-    type = "bar"
-  )
+      x = x_axis, y = ram,
+      name = "CPU distribution",type = "bar"
+    ) 
 })
 ```
 
@@ -283,4 +277,9 @@ A collection of matrix benchmark functions
   
 The purpose of this benchmark isn't to compare `write.csv` to another package. Instead, 
 we went to assess your machine.
+
+
+--- 
+
+These benchmarks have been developed by many [authors](http://r.research.att.com/benchmarks/R-benchmark-25.R). 
 
