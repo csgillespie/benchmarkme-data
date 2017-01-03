@@ -13,7 +13,8 @@ select_results(test_group, results = NULL, byte_optimize = NULL,
 \arguments{
 \item{res}{A list containing benchmark results and system information.}
 
-\item{test_group}{One of "prog", "matrix_fun", "matrix_cal", "read", "write". Default it \code{prog}.}
+\item{test_group}{One of "prog", "matrix_fun", "matrix_cal", "read5", "read50", "read200", 
+"write5", "write50" or "write200". Default value \code{prog}.}
 
 \item{results}{Default \code{NULL}. If \code{NULL} the \code{past_results}
 data set is used. Otherwise, the input data set.}

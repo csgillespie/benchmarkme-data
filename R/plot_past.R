@@ -32,7 +32,7 @@ plot_past = function(test_group,
                      byte_optimize = NULL, blas_optimize = NULL,
                      log = "y") {
   
-  if(test_group %in% get_benchmarks) {
+  if(missing(test_group) || !(test_group %in% get_benchmarks())) {
     stop("test_group should be one of\n\t", 
          get_benchmarks(collapse = TRUE),
          call. = FALSE)

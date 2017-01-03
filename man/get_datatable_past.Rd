@@ -4,11 +4,11 @@
 \alias{get_datatable_past}
 \title{Interactive table of results}
 \usage{
-get_datatable_past(test_group = c("prog", "matrix_fun", "matrix_cal", "read",
-  "write"), byte_optimize = NULL, blas_optimize = NULL)
+get_datatable_past(test_group, byte_optimize = NULL, blas_optimize = NULL)
 }
 \arguments{
-\item{test_group}{One of "prog", "matrix_fun", "matrix_cal", "read", "write". Default it \code{prog}.}
+\item{test_group}{One of "prog", "matrix_fun", "matrix_cal", "read5", "read50", "read200", 
+"write5", "write50" or "write200". Default value \code{prog}.}
 
 \item{byte_optimize}{Default \code{NULL}. The default behaviour is to plot all results.
 To plot only the byte optimized results, set to \code{TRUE}, otherwise \code{FALSE}.}

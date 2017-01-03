@@ -18,13 +18,12 @@ get_datatable_past = function(test_group,
   if(!requireNamespace("DT", quietly = TRUE))
     stop("Install DT package to use datatable")
   
-  if(test_group %in% get_benchmarks) {
+  if(missing(test_group) || !(test_group %in% get_benchmarks())) {
     stop("test_group should be one of\n\t", 
          get_benchmarks(collapse = TRUE),
          call. = FALSE)
   }
-  
-  
+
   results = select_results(test_group, byte_optimize = byte_optimize, 
                            blas_optimize = blas_optimize)
   results$time = signif(results$time, 4)
