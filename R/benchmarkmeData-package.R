@@ -10,7 +10,7 @@
 #' @keywords package
 #' @seealso \url{https://github.com/csgillespie/benchmarkme-data}
 #' @examples 
-#' plot_past()
+#' plot_past("prog")
 #' ## Need the DT package
-#' get_datatable_past()
+#' get_datatable_past("prog")
 NULL

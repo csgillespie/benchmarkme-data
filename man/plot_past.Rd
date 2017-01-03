@@ -30,6 +30,6 @@ The data set used is \code{data(past_results)}.
 }
 \examples{
 ## Plot non byte optimize code
-plot_past(byte_optimize=FALSE)
+plot_past("prog", byte_optimize=FALSE)
 }
 

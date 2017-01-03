@@ -16,18 +16,18 @@
 #' the argument equal to the empty parameter string, \code{""}.
 #' @examples 
 #' ## Plot non byte optimize code
-#' plot_past(byte_optimize=FALSE)
+#' plot_past("prog", byte_optimize=FALSE)
 #' @importFrom graphics abline grid par plot points legend
 #' @importFrom grDevices palette rgb
 #' @importFrom utils data
 #' @importFrom stats aggregate
 #' @export
 #' @examples 
-#' ## Plot all past results
-#' plot_past()
+#' ## Plot all past results for the `prog` benchmark
+#' plot_past("prog")
 #' 
 #' ## Plot the blas_optimized results
-#' plot_past(blas_optimize=TRUE)
+#' plot_past("prog", blas_optimize=TRUE)
 plot_past = function(test_group, 
                      byte_optimize = NULL, blas_optimize = NULL,
                      log = "y") {

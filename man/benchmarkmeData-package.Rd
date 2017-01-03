@@ -11,9 +11,9 @@ This package contains the results from users running the
 and \code{shine()}.
 }
 \examples{
-plot_past()
+plot_past("prog")
 ## Need the DT package
-get_datatable_past()
+get_datatable_past("prog")
 }
 \author{
 \email{csgillespie@gmail.com}
