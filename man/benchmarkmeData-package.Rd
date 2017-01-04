@@ -7,13 +7,10 @@
 \title{The benchmarkmeData package}
 \description{
 This package contains the results from users running the 
-\pkg{benchmarkme} package. The key functions are \code{plot_past()}, \code{get_datatable_past()} 
-and \code{shine()}.
+\pkg{benchmarkme} package. The key function is \code{plot_past()}.
 }
 \examples{
 plot_past("prog")
-## Need the DT package
-get_datatable_past("prog")
 }
 \author{
 \email{csgillespie@gmail.com}
