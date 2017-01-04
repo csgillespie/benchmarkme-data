@@ -1,5 +1,3 @@
-
-
 #' Interactive table of results
 #' 
 #' A summary of past results
