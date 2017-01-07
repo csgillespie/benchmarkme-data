@@ -4,5 +4,7 @@ test_that("Test plot_past", {
   expect_true(is.data.frame(plot_past(test_group=c("matrix_fun"))))
   expect_true(is.data.frame(plot_past("prog", byte_optimize = FALSE, blas_optimize = TRUE)))
   expect_true(is.data.frame(plot_past("prog", byte_optimize = TRUE)))
+  expect_error(plot_past("Prog"))
+  
 }
 )
