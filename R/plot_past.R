@@ -6,7 +6,8 @@
 #' \item Figure 2: Relative time (compared to the smallest benchmark).
 #' }
 #' The data set used is \code{data(past_results)}.
-#' @param test_group One of "prog", "matrix_fun", "matrix_cal", "read", "write". Default it \code{prog}.
+#' @param test_group One of "prog", "matrix_fun", "matrix_cal", "read5", "read50", "read200", 
+#' "write5", "write50" or "write200". Default value \code{prog}.
 #' @param byte_optimize Default \code{NULL}. The default behaviour is to plot all results.
 #' To plot only the byte optimized results, set to \code{TRUE}, otherwise \code{FALSE}.
 #' @param blas_optimize Default \code{NULL}. The default behaviour is to plot all results.
@@ -15,24 +16,28 @@
 #' the argument equal to the empty parameter string, \code{""}.
 #' @examples 
 #' ## Plot non byte optimize code
-#' plot_past(byte_optimize=FALSE)
+#' plot_past("prog", byte_optimize=FALSE)
 #' @importFrom graphics abline grid par plot points legend
 #' @importFrom grDevices palette rgb
 #' @importFrom utils data
 #' @importFrom stats aggregate
 #' @export
 #' @examples 
-#' ## Plot all past results
-#' plot_past()
+#' ## Plot all past results for the `prog` benchmark
+#' plot_past("prog")
 #' 
 #' ## Plot the blas_optimized results
-#' plot_past(blas_optimize=TRUE)
-plot_past = function(test_group=c("prog", "matrix_fun", "matrix_cal", 
-                                  "read", "write"), 
-                     byte_optimize=NULL, blas_optimize=NULL,
-                     log="y") {
+#' plot_past("prog", blas_optimize=TRUE)
+plot_past = function(test_group, 
+                     byte_optimize = NULL, blas_optimize = NULL,
+                     log = "y") {
   
-
+  if(missing(test_group) || !(test_group %in% get_benchmarks())) {
+    stop("test_group should be one of\n\t", 
+         get_benchmarks(collapse = TRUE),
+         call. = FALSE)
+  }
+  
   results = select_results(test_group, byte_optimize = byte_optimize, 
                            blas_optimize = blas_optimize)
 
@@ -49,12 +54,6 @@ plot_past = function(test_group=c("prog", "matrix_fun", "matrix_cal",
   plot(results$time, xlab="Rank", ylab="Total timing (secs)", 
        ylim=c(ymin, ymax), xlim=c(1, nrow(results)+1), cex=0.9,
        panel.first=grid(), log=log, pch=21, bg=as.numeric(results$test_group))
-  
-  if(any(c("read5", "write5") %in% results$test_group)) {
-    legend("topleft", pt.bg=1:4, 
-           pch=21, legend = levels(results$test_group), 
-           bty="n")
-  }
   
   ## Relative timings  
   fastest = min(results$time)

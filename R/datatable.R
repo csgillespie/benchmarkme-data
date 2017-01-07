@@ -6,16 +6,23 @@
 #' @examples 
 #' ## Need the DT package
 #' ## View all results for prog test
-#' get_datatable_past()
+#' get_datatable_past("prog")
 #' ## View matrix_fun test
 #' get_datatable_past("matrix_fun")
 #' ## View matrix_fun test - only BLAS results
 #' get_datatable_past("matrix_fun", blas_optimize=TRUE)
-get_datatable_past = function(test_group=c("prog", "matrix_fun", "matrix_cal", 
-                                           "read", "write"), 
-                              byte_optimize=NULL, blas_optimize=NULL) {
+get_datatable_past = function(test_group, 
+                              byte_optimize=NULL, blas_optimize = NULL) {
+  .Deprecated(msg = "This function is deprecated and will be removed in the next version. 
+              Instead, use https://jumpingrivers.shinyapps.io/benchmarkme/")
   if(!requireNamespace("DT", quietly = TRUE))
     stop("Install DT package to use datatable")
+  
+  if(missing(test_group) || !(test_group %in% get_benchmarks())) {
+    stop("test_group should be one of\n\t", 
+         get_benchmarks(collapse = TRUE),
+         call. = FALSE)
+  }
 
   results = select_results(test_group, byte_optimize = byte_optimize, 
                            blas_optimize = blas_optimize)
