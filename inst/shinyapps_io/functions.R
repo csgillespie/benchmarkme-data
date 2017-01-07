@@ -13,7 +13,7 @@ get_test = function(type) {
   else if(type == "Read 200MB") "read200"
   else if(type == "Write 5MB") "write5"
   else if(type == "Write 50MB") "write50"
-  else if(type == "Write 200MB") "write5"
+  else if(type == "Write 200MB") "write200"
 }
 
 get_option = function(type) {
