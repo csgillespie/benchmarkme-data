@@ -1,5 +1,5 @@
 list_files = function(from) 
-  list.files(from, full.names = TRUE, pattern = "*.RData")
+  list.files(from, full.names = TRUE, pattern = "*.rds")
 
 
 get_empty_results = function(from) {
