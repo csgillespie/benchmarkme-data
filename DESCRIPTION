@@ -11,6 +11,6 @@ BugReports: https://github.com/csgillespie/benchmarkme-data/issues
 LazyData: TRUE
 Imports: graphics, utils, 
 Suggests: testthat, DT, benchmarkme
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 License: GPL-2 | GPL-3
 Repository: csgillespie

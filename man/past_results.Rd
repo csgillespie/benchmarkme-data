@@ -8,4 +8,3 @@
 \description{
 A summary of past benchmarks.
 }
-

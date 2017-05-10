@@ -31,5 +31,9 @@ The data set used is \code{data(past_results)}.
 \examples{
 ## Plot non byte optimize code
 plot_past("prog", byte_optimize=FALSE)
-}
+## Plot all past results for the `prog` benchmark
+plot_past("prog")
 
+## Plot the blas_optimized results
+plot_past("prog", blas_optimize=TRUE)
+}

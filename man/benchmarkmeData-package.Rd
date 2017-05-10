@@ -2,8 +2,8 @@
 % Please edit documentation in R/benchmarkmeData-package.R
 \docType{package}
 \name{benchmarkmeData-package}
-\alias{benchmarkmeData}
 \alias{benchmarkmeData-package}
+\alias{benchmarkmeData}
 \title{The benchmarkmeData package}
 \description{
 This package contains the results from users running the 
@@ -12,11 +12,10 @@ This package contains the results from users running the
 \examples{
 plot_past("prog")
 }
-\author{
-\email{csgillespie@gmail.com}
-}
 \seealso{
 \url{https://github.com/csgillespie/benchmarkme-data}
 }
+\author{
+\email{csgillespie@gmail.com}
+}
 \keyword{package}
-

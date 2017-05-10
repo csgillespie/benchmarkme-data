@@ -13,4 +13,3 @@ is_blas_optimize(results)
 Try to determine parallel BLAS, which implies non-standard R!
 Compare user with elapsed time. If user >> elapsed, then parallel BLAS
 }
-

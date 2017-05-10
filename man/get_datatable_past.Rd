@@ -28,4 +28,3 @@ get_datatable_past("matrix_fun")
 ## View matrix_fun test - only BLAS results
 get_datatable_past("matrix_fun", blas_optimize=TRUE)
 }
-
