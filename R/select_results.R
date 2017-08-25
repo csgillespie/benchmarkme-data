@@ -12,8 +12,9 @@
 #' select_results("matrix_fun", blas_optimize=TRUE)
 select_results = function(test_group, 
                           results = NULL,
-                          byte_optimize=NULL, 
-                          blas_optimize=NULL) {
+                          byte_optimize = NULL, 
+                          blas_optimize = NULL, 
+                          cores = 0) {
   ## Load past data
   tmp_env = new.env()
   data(past_results, package="benchmarkmeData", envir = tmp_env)
@@ -28,13 +29,14 @@ select_results = function(test_group,
   }
   
   if(!is.null(blas_optimize)) {
-    results = results[results$blas_optimize==blas_optimize,]
+    results = results[results$blas_optimize == blas_optimize,]
   }
   
   if(length(test_group) > 1) test_group = test_group[1]
   if(test_group %in% c("read", "write")) test_group = paste0(test_group, c(5, 50, 200))
   
   results = results[results$test_group %in% test_group,]
+  results = results[results$cores == cores,]
   
   ## Aggregate over test
   ## Ensure that we have timings for all required tests.

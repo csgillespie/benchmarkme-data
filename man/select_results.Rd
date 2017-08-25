@@ -8,7 +8,7 @@
 summarise_results(res)
 
 select_results(test_group, results = NULL, byte_optimize = NULL,
-  blas_optimize = NULL)
+  blas_optimize = NULL, cores = 0)
 }
 \arguments{
 \item{res}{A list containing benchmark results and system information.}
@@ -24,6 +24,8 @@ To plot only the byte optimized results, set to \code{TRUE}, otherwise \code{FAL
 
 \item{blas_optimize}{Default \code{NULL}. The default behaviour is to plot all results.
 To plot only the BLAS optimized results, set to \code{TRUE}, otherwise \code{FALSE}.}
+
+\item{cores}{Default \code{0}, i.e. no parallel.}
 }
 \value{
 A data frame

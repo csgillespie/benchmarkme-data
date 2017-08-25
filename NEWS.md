@@ -1,3 +1,7 @@
+## Version 0.5.0
+  * Updated data set
+  * Added cores column to data set
+
 ## Version 0.4.0
   * Moved shiny interface to shinyapps.io
   * Updated data set

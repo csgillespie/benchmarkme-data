@@ -19,12 +19,25 @@ is_blas_optimize = function(results){
 summarise_results = function(res) {
   id = res$id
   date = res$date
-  
   results = res$results
-  no_of_rep = nrow(results)/length(unique(results$test))
-  timings = tapply(results[,3], results[,5], function(i) sum(i)/no_of_rep)
-  tests = names(timings)
-  values = as.vector(timings)
+  
+  ## Make past versions consistent with current
+  if(is.null(results$cores)) 
+    results$cores = 0
+  colnames(results)[5] = "test_group"
+  
+  
+  
+  #no_of_rep = nrow(results)/length(unique(results$test))
+ # timings = tapply(results[,3], results[,5], function(i) sum(i)/no_of_rep)
+  timings = aggregate(x = results$elapsed, 
+                      by = list(test_group = results$test_group, cores =results$cores), 
+                      FUN = "mean")
+  
+  
+  tests = timings$test_group
+  cores = timings$cores
+  values = timings$x
   
   blas_optimize = is_blas_optimize(results)
   cpus = gsub("(?<=[\\s])\\s*|^\\s+$", "", unique(res$cpu$model_name), perl=TRUE)
@@ -49,10 +62,10 @@ summarise_results = function(res) {
   if(!is.na(sysname) && sysname == "windows") 
     sysname = "Windows"
   
-  data.frame(id, date, time=timings, test_group=tests, 
+  data.frame(id, date, time=values, test_group=tests, 
              cpu=cpus, ram=as.numeric(ram), byte_optimize, 
              r_major, r_minor, 
-             sysname, release, blas_optimize,
+             sysname, release, blas_optimize, cores,
              stringsAsFactors = FALSE)
 }
 
