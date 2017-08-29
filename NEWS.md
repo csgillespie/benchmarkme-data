@@ -1,3 +1,6 @@
+## Version 0.5.1
+  * Add to CRAN
+
 ## Version 0.5.0
   * Updated data set
   * Added cores column to data set
