@@ -5,13 +5,11 @@
 #' @param results The output from a \code{benchmark_*} call.
 #' @export
 is_blas_optimize = function(results){
-  ## 
   user_times = tapply(results$user, results[, 5], sum)
   elapsed_times = tapply(results$elapsed, results[, 5], sum)*1.1
   blas_optimize = any(user_times > elapsed_times)
   blas_optimize  
 }
-
 
 #' @rdname select_results
 #' @param res A list containing benchmark results and system information.
@@ -22,19 +20,16 @@ summarise_results = function(res) {
   results = res$results
   
   ## Make past versions consistent with current
-  if(is.null(results$cores)) 
-    results$cores = 0
+  if(!("cores" %in% colnames(results))) results$cores = 0
   colnames(results)[5] = "test_group"
-  
-  
-  
-  #no_of_rep = nrow(results)/length(unique(results$test))
- # timings = tapply(results[,3], results[,5], function(i) sum(i)/no_of_rep)
+
+  if(!("parallel" %in% colnames(results))) results$parallel = FALSE
+  # no_of_rep = nrow(results)/length(unique(results$test))
+  # timings = tapply(results[,3], results[,5], function(i) sum(i)/no_of_rep)
   timings = aggregate(x = results$elapsed, 
-                      by = list(test_group = results$test_group, cores =results$cores), 
-                      FUN = "mean")
-  
-  
+                      by = list(test_group = results$test_group, cores = results$cores), 
+                      FUN = "sum")
+
   tests = timings$test_group
   cores = timings$cores
   values = timings$x
@@ -66,6 +61,7 @@ summarise_results = function(res) {
              cpu=cpus, ram=as.numeric(ram), byte_optimize, 
              r_major, r_minor, 
              sysname, release, blas_optimize, cores,
+             parallel = unique(results$parallel),
              stringsAsFactors = FALSE)
 }
 

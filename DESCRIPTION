@@ -9,8 +9,8 @@ Description: Crowd sourced benchmarks from running the 'benchmarkme' package.
 URL: https://github.com/csgillespie/benchmarkme-data
 BugReports: https://github.com/csgillespie/benchmarkme-data/issues
 LazyData: TRUE
-Imports: graphics, utils, 
+Imports: graphics, utils, dplyr
 Suggests: testthat, DT, benchmarkme
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
 License: GPL-2 | GPL-3
 Repository: csgillespie

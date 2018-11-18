@@ -1,6 +1,7 @@
-list_files = function(from) 
+list_files = function(from) {
   c(list.files(from, full.names = TRUE, pattern = "*.rds"), 
     list.files(from, full.names = TRUE, pattern = "*.RData"))
+}
 
 
 get_empty_results = function(from) {
@@ -13,7 +14,7 @@ get_empty_results = function(from) {
 
 #' Functions for manipulating uploaded results
 #' 
-#' Functions used for moving and creating the \code{past_results} data set from 
+#' Functions used for moving and creating the \code{past_results_v2} data set from 
 #' uploaded data. The \code{move_files} function is used to moved files from the server
 #' to another location, whilst removing any empty data sets. 
 #' @note One of the unit tests uploads an empty results file. 
