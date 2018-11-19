@@ -12,7 +12,6 @@ globalVariables(c("cpu", "n_time", "past_results_v2", "time", "sysname", "ram"))
 #' @param blas_optimize Default \code{NULL}. The default behaviour is to plot all results.
 #' To plot only the BLAS optimized results, set to \code{TRUE}, otherwise \code{FALSE}.
 #' @param cores Default \code{0}, i.e. no parallel.
-#' @param normalize When comparing parallel code, normalise by a single core
 #' @param log By default the y axis is plotted on the log scale. To change, set the 
 #' the argument equal to the empty parameter string, \code{""}.
 #' @importFrom graphics abline grid par plot points legend
@@ -27,7 +26,6 @@ globalVariables(c("cpu", "n_time", "past_results_v2", "time", "sysname", "ram"))
 plot_past = function(test_group, 
                      blas_optimize = NULL,
                      cores = 0,
-                     normalize = FALSE,
                      log = "y") {
   
   if(missing(test_group) || !(test_group %in% get_benchmarks())) {
@@ -37,7 +35,7 @@ plot_past = function(test_group,
   }
   
   results = select_results(test_group, blas_optimize = blas_optimize, 
-                           cores = cores, normalize = normalize)
+                           cores = cores)
 
   ## Arrange plot colours and layout
   op = par(mar = c(3, 3, 2, 1), 

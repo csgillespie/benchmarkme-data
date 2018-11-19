@@ -12,49 +12,24 @@
 select_results = function(test_group, 
                           results = NULL,
                           blas_optimize = NULL, 
-                          cores = 0, 
-                          normalize = FALSE) {
+                          cores = 0) {
   
-  ## Sort out arguments
-  if(cores == 0) {
-    cores = 1
-    parallel = FALSE
-  } else {
-    parallel = TRUE
-  }
-  
-  if(isTRUE(normalize) && isFALSE(parallel)) {
-    stop("normalize can only be used when parallel is TRUE", call. = FALSE)
-  }
-  
-  if(isTRUE(normalize)) cores = c(1, cores)
-  if(is.null(blas_optimize)) blas_optimize = c(FALSE, TRUE)
+  if (is.null(blas_optimize)) blas_optimize = c(FALSE, TRUE)
   
   ## Load past data
   tmp_env = new.env()
-  data(past_results_v2, package="benchmarkmeData", envir = tmp_env)
+  data(past_results_v2, package = "benchmarkmeData", envir = tmp_env)
 
   # Format data
   results = results %>%
     bind_rows(tmp_env$past_results_v2) %>%
     filter(blas_optimize %in% !!blas_optimize) %>% 
-    filter(test_group == !!test_group[1]) %>%
+    filter(test_group == !!test_group) %>%
     filter(cores %in% !!cores) %>%
-    filter(parallel == !!parallel) %>%
     filter(!is.na(time)) %>%
     group_by(id, cpu, date, sysname, blas_optimize, test_group, ram, cores) %>%
     summarise(time = sum(time)) %>%
     ungroup()
-  
-  if (normalize) {
-   results = results %>%
-      group_by(id) %>%
-      summarise(n_time = (time/time[cores == 1])[cores != 1], 
-                cores = max(cores)) %>%
-      left_join(results, by = c("id", "cores")) %>%
-      select(-time) %>%
-      rename(time = n_time)
-  }
 
   results = results %>%
     arrange(time) %>%

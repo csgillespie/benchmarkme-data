@@ -8,7 +8,7 @@
 summarise_results(res)
 
 select_results(test_group, results = NULL, blas_optimize = NULL,
-  cores = 0, normalize = FALSE)
+  cores = 0)
 }
 \arguments{
 \item{res}{A list containing benchmark results and system information.}
@@ -23,8 +23,6 @@ data set is used. Otherwise, the input data set.}
 To plot only the BLAS optimized results, set to \code{TRUE}, otherwise \code{FALSE}.}
 
 \item{cores}{Default \code{0}, i.e. no parallel.}
-
-\item{normalize}{When comparing parallel code, normalise by a single core}
 }
 \value{
 A data frame

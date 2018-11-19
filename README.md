@@ -6,3 +6,11 @@
 
 
 An R package containing the uploaded results from the [benchmarkme](https://github.com/csgillespie/benchmarkme) benchmarking package.
+
+---
+
+Development of this package was supported by [Jumping Rivers](https://www.jumpingrivers.com)
+
+
+
+

@@ -9,8 +9,7 @@
 #' get_datatable_past("prog")
 get_datatable_past = function(test_group, 
                               blas_optimize = NULL,
-                              cores = 0,
-                              normalize = FALSE) {
+                              cores = 0) {
 
   if(!requireNamespace("DT", quietly = TRUE))
     stop("Install DT package to use datatable", call. = FALSE)
@@ -21,7 +20,7 @@ get_datatable_past = function(test_group,
   }
   
   results = select_results(test_group, blas_optimize = blas_optimize, 
-                           cores = cores, normalize = normalize)
+                           cores = cores)
   results$time = signif(results$time, 4)
 
   # ## Format

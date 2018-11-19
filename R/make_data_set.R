@@ -23,7 +23,6 @@ summarise_results = function(res) {
   if(!("cores" %in% colnames(results))) results$cores = 0
   colnames(results)[5] = "test_group"
 
-  if(!("parallel" %in% colnames(results))) results$parallel = FALSE
   # no_of_rep = nrow(results)/length(unique(results$test))
   # timings = tapply(results[,3], results[,5], function(i) sum(i)/no_of_rep)
   timings = aggregate(x = results$elapsed, 
@@ -57,12 +56,10 @@ summarise_results = function(res) {
   if(!is.na(sysname) && sysname == "windows") 
     sysname = "Windows"
   
-  data.frame(id, date, time=values, test_group=tests, 
+  tibble::tibble(id, date, time = values, test_group = tests, 
              cpu=cpus, ram=as.numeric(ram), byte_optimize, 
              r_major, r_minor, 
-             sysname, release, blas_optimize, cores,
-             parallel = unique(results$parallel),
-             stringsAsFactors = FALSE)
+             sysname, release, blas_optimize, cores)
 }
 
 #' @rdname move_files
