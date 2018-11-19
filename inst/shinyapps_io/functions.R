@@ -1,6 +1,6 @@
 
 pretty_ram = function(x) {
-  x = x[!is.na(x)]
+ # x = x[!is.na(x)]
   x = x/(1000^3)
   2^round(log2(x), 0)
 }
@@ -22,11 +22,14 @@ get_option = function(type) {
   else TRUE
 }
 
+#res_table = res
 clean_table = function(res_table) {
   
   res_table$time = signif(res_table$time, 4)
-  res_table = res_table[,c("rank", "time", "cpu", "byte_optimize", 
-               "blas_optimize", "sysname", "ram", "test_group", "is_user")]
+  
+  res_table = res_table[,c("id", "rank", "time", "cpu", "byte_optimize", "blas_optimize", "sysname", 
+                           "ram", "test_group", "cores", "is_user")]
+  
   res_table$byte_optimize  = res_table$byte_optimize > 0
   res_table$sysname[res_table$sysname == "Darwin"] = "Apple"
   res_table$sysname[res_table$sysname == "unix"] = "Unix"

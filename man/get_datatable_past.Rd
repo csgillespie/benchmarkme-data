@@ -4,7 +4,8 @@
 \alias{get_datatable_past}
 \title{Interactive table of results}
 \usage{
-get_datatable_past(test_group, byte_optimize = NULL, blas_optimize = NULL)
+get_datatable_past(test_group, byte_optimize = NULL,
+  blas_optimize = NULL)
 }
 \arguments{
 \item{test_group}{One of "prog", "matrix_fun", "matrix_cal", "read5", "read50", "read200", 

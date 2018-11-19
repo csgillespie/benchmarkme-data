@@ -11,7 +11,7 @@ drat::addRepo("csgillespie")
 rsconnect::deployApp(appDir = "~/github/benchmarkme-data/inst/shinyapps_io/",
                      account="jumpingrivers", server = "shinyapps.io",
                      appTitle = "benchmarkme"
-                    )
+)
 ```
 
 ```{r setup, include=FALSE}
@@ -37,10 +37,13 @@ selectInput("blas", "Blas",
 selectInput("os", "Operating system", 
             c("All", "Linux", "Apple", "Windows", "Unix"))
 
+checkboxInput("is_parallel", "Parallel benchmarks", TRUE)
+
 selectInput("test", "Benchmark test", 
-        c("Programming", "Matrix functions", "Matrix calulations", 
-          "Read 5MB", "Read 50MB","Read 200MB",
-          "Write 5MB", "Write 50MB", "Write 200MB"))
+            c("Programming", "Matrix functions", "Matrix calulations", 
+              "Read 5MB", "Read 50MB","Read 200MB",
+              "Write 5MB", "Write 50MB", "Write 200MB"))
+
 fileInput("results", "Upload results file")
 
 user_rank = NULL
@@ -55,67 +58,69 @@ results = reactive({
     user_id = NULL
   }
   #res = select_results("prog", all_results)
-  res = select_results("read5", all_results)
+  res = select_results("prog", all_results, parallel = TRUE)
   blas = get_option(input$blas)
   byte = get_option(input$byte)
+  is_parallel = input$is_parallel
   res = select_results(get_test(input$test), all_results, 
                        byte_optimize = byte, 
-                       blas_optimize = blas)
+                       blas_optimize = blas, 
+                       parallel = is_parallel)
   res$is_user = FALSE
   res$is_user[res$id == user_id] = TRUE
   res = clean_table(res)
   
   if(input$os != "All") res = res[res$sysname == input$os,]
-
-  colnames(res) = c("Rank", "Time (sec)", "CPU",
-                       "Byte Compile", "BLAS Opt", "OS", "RAM (GB)", "Test", "is_user")
-
-  res = res[,c(TRUE, TRUE, TRUE,
-                is.null(byte), is.null(blas), input$os == "All", TRUE,
-                input$Test == "All",  TRUE, TRUE)]
+  colnames(res) = c("id", "Rank", "Time", "CPU",
+                    "Byte Compile", "BLAS Opt", "OS", "RAM (GB)", "Test", 
+                    "Cores", "is_user")
+ 
+  res = res[,c(TRUE, !is_parallel, TRUE, TRUE,
+               is.null(byte), is.null(blas), input$os == "All", TRUE,
+               input$Test == "All",  TRUE, is_parallel, TRUE)]
   if(nrow(res) > 0) res$Rank = 1:nrow(res)
   res
-  })
+})
 br()
 
 renderUI({
   ret = NULL
   user_rank = which(results()$is_user)
-
+  
   if(!is.null(input$results)) {
-     ret = paste(ret, "File uploaded.", br(), br())
-
-      if(sum(user_rank) > 0) {
-        ret = paste(ret, "Your machine is ranked", user_rank, "out of",
-                    nrow(results()), "machines")
-      } else {
-        ret = paste(ret, br(), "For the current selection, your own
+    ret = paste(ret, "File uploaded.", br(), br())
+    
+    if(sum(user_rank) > 0) {
+      ret = paste(ret, "Your machine is ranked", user_rank, "out of",
+                  nrow(results()), "machines")
+    } else {
+      ret = paste(ret, br(), "For the current selection, your own
                 machine isn't displayed")
-      }
+    }
   }
   HTML(ret)
-  })
+})
 
 div(class="div-wrapper",
-  a(href="http://www.jumpingrivers.com",
-    img(src = "logo.png", style="width:150px;")
+    a(href="http://www.jumpingrivers.com",
+      img(src = "logo.png", style="width:150px;")
     )
 )
 ```
 
 
 Table
-===================================== 
+=====================================
 
 ### Top machines
 
 ```{r}
 DT::renderDataTable({
   r = results()
-  data_table = DT::datatable(results()[,-ncol(r)], rownames=FALSE) 
+  data_table = DT::datatable(results()[,-c(1, ncol(r))], rownames=FALSE)
   if(sum(r$is_user) > 0) {
     DT::formatStyle(data_table, "Rank",
-                  backgroundColor = DT::styleEqual(which(r$is_user), "orange"))
+                    backgroundColor = DT::styleEqual(which(r$is_user), "orange"))
   } else {
     data_table
   }
@@ -123,9 +128,9 @@ DT::renderDataTable({
 ```
 
 Graphics
-===================================== 
+=====================================
 
-### Absolute time 
+### Absolute time
 
 ```{r}
 library(plotly)
@@ -136,16 +141,29 @@ renderPlotly({
     res$size[res$is_user] =  16
     res$colour = "black"
     res$colour[res$is_user] = "steelblue"
- 
-  plot_ly(res, x = ~Rank, y = ~`Time (sec)`, type="scatter",
-  marker = list(color = ~colour, width=10, size=~size),           
-#          color= ~is_user, size=~size, 
+    if(!input$is_parallel) {
+      plot_ly(res, x = ~Rank, y = ~`Time`, type="scatter",
+              marker = list(color = ~colour, width=10, size=~size),
+              #          color= ~is_user, size=~size,
+              text = ~paste("CPU: ", CPU)) %>%
+        layout(yaxis = list(type = "log", title = "Time (sec)"))
+    } else {
+      saveRDS(res, file = "/tmp/tmp.rds")
+      plot_ly(res, x = ~Cores, y = ~`Time`, type="scatter",
+        marker = list(color = ~colour, width=10, size=~size),
+        #          color= ~is_user, size=~size,
         text = ~paste("CPU: ", CPU)) %>%
-     layout(yaxis = list(type = "log", title = "Time (sec)"))
+      add_lines(color=~id) %>%
+    layout(yaxis = list(type = "log", title = "Normalised time (to 1 core)"), showlegend = FALSE)
+
+
+
+    }  
   } else {
-    plot_ly()
-  } 
-})
+      plot_ly()
+  }
+  
+  })
 ```
 
 ### Relative time
@@ -153,26 +171,26 @@ renderPlotly({
 ```{r}
 library(plotly)
 renderPlotly({
-  if(nrow(results()) > 0) {
-  relative = (results()$`Time (sec)`)/min(results()$`Time (sec)`)
+  if(!input$is_parallel && nrow(results()) > 0) {
+  relative = (results()$Time/min(results()$Time))
   plot_ly(results(), x = ~Rank, y = ~relative,
         text = ~paste("CPU: ", CPU)) %>%
      layout(yaxis = list(type = "log", title = "Relative time"))
   } else {
     plot_ly()
   }
-  
+
 
 })
 ```
 
 Machine summary
-===================================== 
+=====================================
 
-Column 1 
+Column 1
 ------------------------------------
 
-### CPUs 
+### CPUs
 
 ```{r}
 total = function(i) sum(i > 0, na.rm = TRUE)
@@ -191,7 +209,7 @@ renderPlotly({
 })
 ```
 
-### RAM 
+### RAM
 
 ```{r}
 
@@ -202,7 +220,7 @@ renderPlotly({
   plot_ly(
       x = x_axis, y = ram,
       name = "CPU distribution",type = "bar"
-    ) 
+    )
 })
 ```
 
@@ -216,7 +234,7 @@ total = function(i) sum(i > 0, na.rm = TRUE)
 renderPlotly({
   OS = sort(table(results()$OS))
   nam = as.character(names(OS))
-  
+
   plot_ly(
     x = nam,
     y = as.vector(OS),
@@ -228,21 +246,21 @@ renderPlotly({
 
 
 Benchmark description
-===================================== 
+=====================================
 
-### Overview 
+### Overview
 
 There are two main benchmarks in this package:
 
   * `benchmark_std()`
-    - This consists of three sub benchmarks: `benchmark_prog`, 
+    - This consists of three sub benchmarks: `benchmark_prog`,
     `benchmark_matrix_cal`, and `benchmark_matrix_fun`
   * `benchmark_io()`
     - This consists of two sub benchmarks: `read` and `write`.
 
-#### Programming benchmarks 
+#### Programming benchmarks
 
-The `benchmark_prog` benchmark consists of timing five matrix programming operations: 
+The `benchmark_prog` benchmark consists of timing five matrix programming operations:
 
   * $3,500,000$ Fibonacci numbers calculation (vector calc) - `bm_prog_fib`.
   * Creation of a $3500 \times 3500$ Hilbert matrix (matrix calc) - `bm_prog_hilbert`.
@@ -274,12 +292,12 @@ A collection of matrix benchmark functions
 
   * Reading a $5$, $50$ and $200$MB csv file
   * Writing a $5$, $50$ and $200$MB csv file
-  
-The purpose of this benchmark isn't to compare `write.csv` to another package. Instead, 
+
+The purpose of this benchmark isn't to compare `write.csv` to another package. Instead,
 we went to assess your machine.
 
 
---- 
+---
 
-These benchmarks have been developed by many [authors](http://r.research.att.com/benchmarks/R-benchmark-25.R). 
+These benchmarks have been developed by many [authors](http://r.research.att.com/benchmarks/R-benchmark-25.R).
 

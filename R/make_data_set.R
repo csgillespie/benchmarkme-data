@@ -20,7 +20,7 @@ summarise_results = function(res) {
   id = res$id
   date = res$date
   results = res$results
-  
+  if (!is.data.frame(results)) return(NULL)
   ## Make past versions consistent with current
   if(is.null(results$cores)) 
     results$cores = 0
@@ -78,6 +78,3 @@ make_data_set = function(from) {
   rownames(all_res) = 1:nrow(all_res)
   all_res
 }
-
-
-

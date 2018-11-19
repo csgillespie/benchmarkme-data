@@ -3,8 +3,7 @@
 #' Selects and aggregates over the \code{past_results} data set or the 
 #' \code{results} input data set..
 #' @return A data frame
-#' @param results Default \code{NULL}. If \code{NULL} the \code{past_results}
-#' data set is used. Otherwise, the input data set.
+#' @param parallel Default \code{FALSE}. Should the parallel benchmarks be returned
 #' @inheritParams plot_past
 #' @export
 #' @examples 
@@ -14,10 +13,18 @@ select_results = function(test_group,
                           results = NULL,
                           byte_optimize = NULL, 
                           blas_optimize = NULL, 
-                          cores = 0) {
+                          parallel = FALSE) {
   ## Load past data
   tmp_env = new.env()
   data(past_results, package="benchmarkmeData", envir = tmp_env)
+  if(!is.null(results)) {
+  
+    results = results %>%
+      group_by(test_group) %>%
+      mutate(std_time = time/if(all(cores==0)) min(time) else mean(time[cores == 1]))
+  }
+  
+  
   results = rbind(tmp_env$past_results, results)
 
   if(!is.null(byte_optimize)) {
@@ -36,18 +43,26 @@ select_results = function(test_group,
   if(test_group %in% c("read", "write")) test_group = paste0(test_group, c(5, 50, 200))
   
   results = results[results$test_group %in% test_group,]
-  results = results[results$cores == cores,]
+  #results = results[results$cores == cores,]
   
   ## Aggregate over test
   ## Ensure that we have timings for all required tests.
-  results = aggregate(time ~ id + byte_optimize + cpu + date + 
-                        sysname + blas_optimize + test_group + ram, 
-                      data=results, 
-                      FUN=sum)
+  #results = aggregate(time ~ id + byte_optimize + cpu + date + 
+  #                      sysname + blas_optimize + test_group + ram + cores + std_time, 
+  #                    data=results, 
+  #                    FUN=sum)
+  
   results = results[!is.na(results$time), ]
-  results = results[order(results$time), ]
   results$test_group = factor(results$test_group, levels=test_group)
   results = results[order(results$time), ]
+  if(parallel) {
+    results = results[results$cores != 0,]
+    results$time = results$std_time
+  } else {
+    results = results[results$cores == 0,]
+  }
+  
+  
   results$rank = 1:nrow(results)
   
   results
