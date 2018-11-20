@@ -22,7 +22,7 @@ globalVariables(c("cpu", "n_time", "past_results_v2", "time", "sysname", "ram"))
 #' @export
 #' @examples 
 #' ## Plot all past results for the `prog` benchmark
-#' plot_past("prog")
+#' plot_past("prog", blas_optimize = NULL)
 plot_past = function(test_group, 
                      blas_optimize = NULL,
                      cores = 0,

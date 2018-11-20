@@ -8,7 +8,7 @@
 #' @inheritParams plot_past
 #' @export
 #' @examples 
-#' select_results("prog", blas_optimize = FALSE)
+#' select_results("prog", blas_optimize = NULL)
 select_results = function(test_group, 
                           results = NULL,
                           blas_optimize = NULL, 

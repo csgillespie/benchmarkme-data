@@ -28,5 +28,5 @@ The data set used is \code{data(past_results_v2)}.
 }
 \examples{
 ## Plot all past results for the `prog` benchmark
-plot_past("prog")
+plot_past("prog", blas_optimize = NULL)
 }
