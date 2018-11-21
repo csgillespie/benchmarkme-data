@@ -19,7 +19,7 @@ library("shiny")
 library("flexdashboard")
 library("benchmarkmeData")
 library("plotly")
-data("past_results", package="benchmarkmeData")
+data("past_results_v2", package="benchmarkmeData")
 source("functions.R")
 ```
 

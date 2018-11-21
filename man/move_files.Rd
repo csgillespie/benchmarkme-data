@@ -15,7 +15,7 @@ move_files(from, to)
 \item{to}{Destination directory}
 }
 \description{
-Functions used for moving and creating the \code{past_results} data set from 
+Functions used for moving and creating the \code{past_results_v2} data set from 
 uploaded data. The \code{move_files} function is used to moved files from the server
 to another location, whilst removing any empty data sets.
 }

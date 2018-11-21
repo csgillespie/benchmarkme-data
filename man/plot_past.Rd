@@ -4,15 +4,11 @@
 \alias{plot_past}
 \title{Scatter plot of past benchmarks}
 \usage{
-plot_past(test_group, byte_optimize = NULL, blas_optimize = NULL,
-  cores = 0, log = "y")
+plot_past(test_group, blas_optimize = NULL, cores = 0, log = "y")
 }
 \arguments{
 \item{test_group}{One of "prog", "matrix_fun", "matrix_cal", "read5", "read50", "read200", 
 "write5", "write50" or "write200". Default value \code{prog}.}
-
-\item{byte_optimize}{Default \code{NULL}. The default behaviour is to plot all results.
-To plot only the byte optimized results, set to \code{TRUE}, otherwise \code{FALSE}.}
 
 \item{blas_optimize}{Default \code{NULL}. The default behaviour is to plot all results.
 To plot only the BLAS optimized results, set to \code{TRUE}, otherwise \code{FALSE}.}
@@ -28,14 +24,9 @@ Plot the previous benchmarks. This function creates two figures.
 \item Figure 1: Total benchmark time over all benchmarks (in seconds) on the y-axis.
 \item Figure 2: Relative time (compared to the smallest benchmark).
 }
-The data set used is \code{data(past_results)}.
+The data set used is \code{data(past_results_v2)}.
 }
 \examples{
-## Plot non byte optimize code
-plot_past("prog", byte_optimize=FALSE)
 ## Plot all past results for the `prog` benchmark
-plot_past("prog")
-
-## Plot the blas_optimized results
-plot_past("prog", blas_optimize=TRUE)
+plot_past("prog", blas_optimize = NULL)
 }

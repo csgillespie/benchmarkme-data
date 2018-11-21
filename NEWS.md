@@ -1,3 +1,7 @@
+## Version 1.0.0
+  * Matching version with benchmarkme
+  * Moving to new version (unfortunately, we can't use past results)
+
 ## Version 0.5.1
   * Add to CRAN
 

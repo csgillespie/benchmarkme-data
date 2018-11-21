@@ -4,18 +4,16 @@
 \alias{get_datatable_past}
 \title{Interactive table of results}
 \usage{
-get_datatable_past(test_group, byte_optimize = NULL,
-  blas_optimize = NULL)
+get_datatable_past(test_group, blas_optimize = NULL, cores = 0)
 }
 \arguments{
 \item{test_group}{One of "prog", "matrix_fun", "matrix_cal", "read5", "read50", "read200", 
 "write5", "write50" or "write200". Default value \code{prog}.}
 
-\item{byte_optimize}{Default \code{NULL}. The default behaviour is to plot all results.
-To plot only the byte optimized results, set to \code{TRUE}, otherwise \code{FALSE}.}
-
 \item{blas_optimize}{Default \code{NULL}. The default behaviour is to plot all results.
 To plot only the BLAS optimized results, set to \code{TRUE}, otherwise \code{FALSE}.}
+
+\item{cores}{Default \code{0}, i.e. no parallel.}
 }
 \description{
 A summary of past results
@@ -24,8 +22,4 @@ A summary of past results
 ## Need the DT package
 ## View all results for prog test
 get_datatable_past("prog")
-## View matrix_fun test
-get_datatable_past("matrix_fun")
-## View matrix_fun test - only BLAS results
-get_datatable_past("matrix_fun", blas_optimize=TRUE)
 }

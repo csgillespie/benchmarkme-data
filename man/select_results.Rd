@@ -6,19 +6,16 @@
 \title{Selecting results}
 \usage{
 summarise_results(res)
-
-select_results(test_group, results = NULL, byte_optimize = NULL,
-  blas_optimize = NULL, parallel = FALSE)
+select_results(test_group, results = NULL, blas_optimize = NULL,
+  cores = 0)
 }
 \arguments{
 \item{res}{A list containing benchmark results and system information.}
 
 \item{test_group}{One of "prog", "matrix_fun", "matrix_cal", "read5", "read50", "read200", 
 "write5", "write50" or "write200". Default value \code{prog}.}
-
-\item{byte_optimize}{Default \code{NULL}. The default behaviour is to plot all results.
-To plot only the byte optimized results, set to \code{TRUE}, otherwise \code{FALSE}.}
-
+\item{results}{Default \code{NULL}. If \code{NULL} the \code{past_results_v2}
+data set is used. Otherwise, the input data set.}
 \item{blas_optimize}{Default \code{NULL}. The default behaviour is to plot all results.
 To plot only the BLAS optimized results, set to \code{TRUE}, otherwise \code{FALSE}.}
 
@@ -28,10 +25,9 @@ To plot only the BLAS optimized results, set to \code{TRUE}, otherwise \code{FAL
 A data frame
 }
 \description{
-Selects and aggregates over the \code{past_results} data set or the 
+Selects and aggregates over the \code{past_results_v2} data set or the 
 \code{results} input data set..
 }
 \examples{
-select_results("prog", byte_optimize=TRUE)
-select_results("matrix_fun", blas_optimize=TRUE)
+select_results("prog", blas_optimize = NULL)
 }
