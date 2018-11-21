@@ -6,6 +6,7 @@
 \title{Selecting results}
 \usage{
 summarise_results(res)
+
 select_results(test_group, results = NULL, blas_optimize = NULL,
   cores = 0)
 }
@@ -14,12 +15,14 @@ select_results(test_group, results = NULL, blas_optimize = NULL,
 
 \item{test_group}{One of "prog", "matrix_fun", "matrix_cal", "read5", "read50", "read200", 
 "write5", "write50" or "write200". Default value \code{prog}.}
+
 \item{results}{Default \code{NULL}. If \code{NULL} the \code{past_results_v2}
 data set is used. Otherwise, the input data set.}
+
 \item{blas_optimize}{Default \code{NULL}. The default behaviour is to plot all results.
 To plot only the BLAS optimized results, set to \code{TRUE}, otherwise \code{FALSE}.}
 
-\item{parallel}{Default \code{FALSE}. Should the parallel benchmarks be returned}
+\item{cores}{Default \code{0}, i.e. no parallel.}
 }
 \value{
 A data frame
