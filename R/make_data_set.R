@@ -22,16 +22,14 @@ summarise_results = function(res) {
   ## Make past versions consistent with current
   if (!("cores" %in% colnames(results))) results$cores = 0
   colnames(results)[5] = "test_group"
-
-  # no_of_rep = nrow(results)/length(unique(results$test))
-  # timings = tapply(results[,3], results[,5], function(i) sum(i)/no_of_rep)
   timings = aggregate(x = results$elapsed, 
                       by = list(test_group = results$test_group, cores = results$cores), 
                       FUN = "sum")
 
   tests = timings$test_group
   cores = timings$cores
-  values = timings$x
+  no_of_reps = nrow(results)/length(unique(results$test))
+  values = timings$x / no_of_reps
   
   blas_optimize = is_blas_optimize(results)
   cpus = gsub("(?<=[\\s])\\s*|^\\s+$", "", unique(res$cpu$model_name), perl = TRUE)
