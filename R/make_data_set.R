@@ -53,11 +53,12 @@ summarise_results = function(res) {
   
   if (!is.na(sysname) && sysname == "windows") 
     sysname = "Windows"
-  
+  package_version = package_version(res$package_version)
   tibble::tibble(id, date, time = values, test_group = tests, 
              cpu = cpus, ram = as.numeric(ram), byte_optimize, 
              r_major, r_minor = r_minor_point[1], r_point = r_minor_point[2],
-             sysname, release, blas_optimize, cores)
+             sysname, release, blas_optimize, cores, 
+             package_version = package_version)
 }
 
 #' @rdname move_files
