@@ -1,3 +1,6 @@
+## Version 1.0.1
+  * Dataset bump
+
 ## Version 1.0.0
   * Matching version with benchmarkme
   * Moving to new version (unfortunately, we can't use past results)
