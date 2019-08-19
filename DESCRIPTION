@@ -1,7 +1,7 @@
 Type: Package
 Package: benchmarkmeData
 Title: Data Set for the 'benchmarkme' Package
-Version: 1.0.2
+Version: 1.0.2.9000
 Authors@R: 
     person(given = "Colin",
            family = "Gillespie",
