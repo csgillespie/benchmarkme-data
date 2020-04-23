@@ -7,7 +7,7 @@
 get_datatable_past(test_group, blas_optimize = NULL, cores = 0)
 }
 \arguments{
-\item{test_group}{One of "prog", "matrix_fun", "matrix_cal", "read5", "read50", "read200", 
+\item{test_group}{One of "prog", "matrix_fun", "matrix_cal", "read5", "read50", "read200",
 "write5", "write50" or "write200". Default value \code{prog}.}
 
 \item{blas_optimize}{Default \code{NULL}. The default behaviour is to plot all results.
