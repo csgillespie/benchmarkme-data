@@ -4,7 +4,9 @@
 \name{past_results_v2}
 \alias{past_results_v2}
 \title{Benchmarking results}
-\format{A data frame}
+\format{
+A data frame
+}
 \description{
 A summary of past benchmarks.
 }

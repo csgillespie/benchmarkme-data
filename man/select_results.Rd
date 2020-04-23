@@ -7,8 +7,7 @@
 \usage{
 summarise_results(res)
 
-select_results(test_group, results = NULL, blas_optimize = NULL,
-  cores = 0)
+select_results(test_group, results = NULL, blas_optimize = NULL, cores = 0)
 }
 \arguments{
 \item{res}{A list containing benchmark results and system information.}
